@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avatar Addon 2.0.0 Overhaul - Documentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e1013;
+  --bg-panel:#161920;
+  --bg-panel-2:#1c2029;
+  --border:#2a2f3a;
+  --text:#e9e7df;
+  --text-muted:#9aa0ab;
+  --air:#8ecae6;
+  --water:#219ebc;
+  --earth:#7a9a4e;
+  --fire:#e0592a;
+  --avatar:#f2c14e;
+  --dark:#9b5de5;
+  --nonbender:#b0a99f;
+  --accent:#f2c14e;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 15% 0%, #1a1f2a 0%, transparent 45%),
+    radial-gradient(circle at 85% 10%, #1a2420 0%, transparent 40%),
+    var(--bg);
+  color:var(--text);
+  font-family:'Inter',system-ui,sans-serif;
+  line-height:1.6;
+}
+h1,h2,h3,h4{font-family:'Cinzel',serif; font-weight:600; letter-spacing:.02em; color:#f4f2ea;}
+a{color:var(--avatar); text-decoration:none;}
+a:hover{text-decoration:underline;}
+code, .mono{font-family:'JetBrains Mono',monospace;}
+
+/* layout */
+.layout{display:grid; grid-template-columns:280px 1fr; min-height:100vh;}
+.sidebar{
+  position:sticky; top:0; height:100vh; overflow-y:auto;
+  padding:28px 20px; border-right:1px solid var(--border);
+  background:linear-gradient(180deg,#12151b,#0e1013);
+}
+.brand{display:flex; align-items:center; gap:10px; margin-bottom:6px;}
+.brand-mark{
+  width:34px; height:34px; border-radius:50%;
+  background:conic-gradient(var(--air),var(--water),var(--earth),var(--fire),var(--air));
+  box-shadow:0 0 0 2px #0e1013, 0 0 0 3px var(--border);
+  flex:none;
+}
+.brand-title{font-family:'Cinzel',serif; font-size:15px; line-height:1.25; color:#f4f2ea;}
+.brand-sub{font-size:11px; color:var(--text-muted); margin:2px 0 22px 0; text-transform:uppercase; letter-spacing:.12em;}
+.nav-group{margin-bottom:4px;}
+.nav-group > a{
+  display:block; padding:7px 10px; border-radius:6px; font-size:13.5px;
+  color:var(--text); font-weight:600;
+}
+.nav-group > a:hover{background:var(--bg-panel-2); text-decoration:none;}
+.nav-sub{margin:2px 0 10px 14px; padding-left:10px; border-left:1px solid var(--border);}
+.nav-sub a{
+  display:block; padding:4px 8px; font-size:12.5px; color:var(--text-muted); border-radius:5px;
+}
+.nav-sub a:hover{color:var(--text); background:var(--bg-panel-2); text-decoration:none;}
+
+.content{padding:56px 64px 120px 64px; max-width:1080px;}
+.hero{margin-bottom:64px;}
+.eyebrow{
+  font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+  color:var(--text-muted); margin-bottom:14px; display:flex; gap:10px; align-items:center;
+}
+.eyebrow .bar{width:28px; height:2px; background:linear-gradient(90deg,var(--air),var(--water),var(--earth),var(--fire)); display:inline-block;}
+.hero h1{font-size:42px; margin:0 0 14px 0; line-height:1.15;}
+.hero p.sub{font-size:16.5px; color:var(--text-muted); max-width:680px; margin:0 0 26px 0;}
+.badge-row{display:flex; flex-wrap:wrap; gap:8px;}
+.badge{
+  font-size:11.5px; padding:5px 11px; border-radius:20px; border:1px solid var(--border);
+  color:var(--text-muted); background:var(--bg-panel);
+}
+
+section{margin-bottom:64px; scroll-margin-top:24px;}
+section > h2{
+  font-size:26px; padding-bottom:14px; margin-bottom:22px; border-bottom:1px solid var(--border);
+  display:flex; align-items:baseline; gap:12px;
+}
+section > h2 .num{font-family:'JetBrains Mono',monospace; font-size:14px; color:var(--text-muted); font-weight:400;}
+h3{font-size:18px; margin:30px 0 10px 0;}
+h4{font-size:15px; margin:20px 0 8px 0; color:var(--text);}
+p{color:#d7d5cc; margin:0 0 14px 0;}
+ul, ol{color:#d7d5cc; padding-left:22px;}
+li{margin-bottom:6px;}
+
+.card{
+  background:var(--bg-panel); border:1px solid var(--border); border-radius:10px;
+  padding:20px 22px; margin-bottom:16px;
+}
+.card h4{margin-top:0;}
+.grid-2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+.grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+@media (max-width:900px){.grid-2,.grid-3{grid-template-columns:1fr;}}
+
+table{width:100%; border-collapse:collapse; font-size:13.5px;}
+th,td{padding:9px 12px; border-bottom:1px solid var(--border); text-align:left; vertical-align:top;}
+th{color:var(--text-muted); font-weight:600; font-size:11.5px; text-transform:uppercase; letter-spacing:.06em;}
+tr:hover td{background:#ffffff05;}
+
+.pill{
+  display:inline-block; padding:2px 9px; border-radius:20px; font-size:11px; font-weight:600;
+  border:1px solid currentColor;
+}
+
+/* element blocks */
+.element-block{
+  border-left:3px solid var(--accent); padding-left:22px; margin:40px 0 48px 0;
+}
+.element-block h3{display:flex; align-items:center; gap:10px; color:var(--accent); font-size:20px;}
+.element-block .dot{width:9px; height:9px; border-radius:50%; background:var(--accent); box-shadow:0 0 10px var(--accent);}
+.element-block .lede{font-style:italic; color:var(--text-muted); max-width:680px;}
+.element-block .uses{max-width:760px;}
+.move-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; margin-top:18px;}
+@media (max-width:900px){.move-grid{grid-template-columns:1fr;}}
+.move-card{
+  background:var(--bg-panel); border:1px solid var(--border); border-left:3px solid var(--accent);
+  border-radius:8px; padding:14px 16px;
+}
+.move-card-head{display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;}
+.move-name{font-weight:600; color:#f4f2ea; font-size:14.5px;}
+.move-tag{font-size:10px; color:var(--accent); border:1px solid var(--accent); border-radius:10px; padding:1px 8px; text-transform:uppercase; letter-spacing:.05em;}
+.move-desc{font-size:13px; color:var(--text-muted); margin-bottom:10px;}
+.move-stats{display:flex; flex-wrap:wrap; gap:6px 14px; font-size:11.5px; color:#c9c7bd;}
+.move-stats b{color:var(--text-muted); font-weight:500;}
+
+/* reference table controls */
+.ref-controls{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:16px; align-items:center;}
+.ref-search{
+  flex:1; min-width:220px; background:var(--bg-panel-2); border:1px solid var(--border); color:var(--text);
+  padding:9px 14px; border-radius:8px; font-size:13.5px; font-family:'Inter',sans-serif;
+}
+.ref-search:focus{outline:none; border-color:var(--avatar);}
+.chip{
+  padding:6px 13px; border-radius:20px; font-size:12px; font-weight:600; cursor:pointer;
+  border:1px solid var(--border); background:var(--bg-panel); color:var(--text-muted);
+  user-select:none;
+}
+.chip[data-active="true"]{color:#0e1013; background:var(--chip-color,var(--avatar)); border-color:var(--chip-color,var(--avatar));}
+.ref-count{font-size:12px; color:var(--text-muted); margin-bottom:10px;}
+.ref-wrap{border:1px solid var(--border); border-radius:10px; overflow:hidden;}
+.ref-wrap table{font-size:12.5px;}
+.ref-wrap th{background:var(--bg-panel-2); position:sticky; top:0;}
+.elem-swatch{display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:6px;}
+
+.footer-note{
+  margin-top:80px; padding-top:24px; border-top:1px solid var(--border);
+  color:var(--text-muted); font-size:12.5px;
+}
+::-webkit-scrollbar{width:10px; height:10px;}
+::-webkit-scrollbar-thumb{background:#2a2f3a; border-radius:5px;}
+::-webkit-scrollbar-track{background:transparent;}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="sidebar">
+  <div class="brand">
+    <span class="brand-mark"></span>
+    <span class="brand-title">Avatar Addon<br>2.0.0 Overhaul</span>
+  </div>
+  <div class="brand-sub">Documentation</div>
+
+  <div class="nav-group"><a href="#introduction">1. Introduction</a></div>
+  <div class="nav-sub">
+    <a href="#about">About the addon</a>
+    <a href="#features">Features overview</a>
+    <a href="#installation">Installation requirements</a>
+    <a href="#versions">Supported versions</a>
+  </div>
+
+  <div class="nav-group"><a href="#getting-started">2. Getting Started</a></div>
+  <div class="nav-sub">
+    <a href="#choosing-element">Choosing your element</a>
+    <a href="#becoming-bender">Becoming a bender</a>
+    <a href="#nonbender-gameplay">Non-bender gameplay</a>
+    <a href="#controls-menus">Controls &amp; menus</a>
+  </div>
+
+  <div class="nav-group"><a href="#bending-system">3. Bending System</a></div>
+  <div class="nav-sub">
+    <a href="#element-air">Airbending</a>
+    <a href="#element-water">Waterbending</a>
+    <a href="#element-earth">Earthbending</a>
+    <a href="#element-fire">Firebending</a>
+    <a href="#element-avatar">Avatar System</a>
+    <a href="#element-dark_avatar">Dark Avatar</a>
+    <a href="#element-nonbender">Nonbenders</a>
+  </div>
+
+  <div class="nav-group"><a href="#ability-reference">4. Ability Reference</a></div>
+  <div class="nav-group"><a href="#progression">5. Progression System</a></div>
+  <div class="nav-group"><a href="#armour">6. Armour &amp; Equipment</a></div>
+  <div class="nav-group"><a href="#admin-guide">7. Admin Guide</a></div>
+  <div class="nav-group"><a href="#developer-docs">8. Developer Documentation</a></div>
+  <div class="nav-group"><a href="#troubleshooting">9. Troubleshooting</a></div>
+  <div class="nav-group"><a href="#credits">10. Credits &amp; Community</a></div>
+</nav>
+<main class="content">
+<div class="hero">
+  <div class="eyebrow"><span class="bar"></span>Community Wiki-Style Reference</div>
+  <h1>Avatar Addon &mdash; 2.0.0 Overhaul</h1>
+  <p class="sub">A scripting-driven Minecraft Bedrock addon that turns the Avatar: The Last Airbender bending system
+  into a full survival gameplay layer &mdash; four elements, the Avatar and Dark Avatar states, a level-based skill tree,
+  bending armour, and a server-side admin panel.</p>
+  <div class="badge-row">
+    <span class="badge">Behavior Pack + Resource Pack</span>
+    <span class="badge">Version 2.0.0</span>
+    <span class="badge">88 Bendable Moves</span>
+    <span class="badge">Min Engine 1.21.60</span>
+  </div>
+</div>
+
+<section id="introduction">
+  <h2><span class="num">01</span>Introduction</h2>
+
+  <h3 id="about">About the addon</h3>
+  <p>Avatar Addon is a Minecraft Bedrock scripting addon that implements the four-element bending system from
+  Avatar: The Last Airbender as a playable survival mechanic. Players choose an element (or start as a nonbender),
+  bind moves to their hotbar, and progress through a skill tree by using their bending in combat and traversal.
+  The 2.0.0 Overhaul update is a broad rework of the addon's combat, progression and admin systems.</p>
+
+  <h3 id="features">Features overview</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4>Four elements + two special paths</h4>
+      <p>Air, Water, Earth and Fire, each with a dedicated moveset, plus a Nonbender chi-blocking kit and an
+      end-game Avatar / Dark Avatar path that combines all four elements.</p>
+    </div>
+    <div class="card">
+      <h4>88 unique moves</h4>
+      <p>Every move has its own cost, cooldown, damage tier and unlock requirement &mdash; from basic elemental
+      shots to ultimate, once-every-few-minutes techniques.</p>
+    </div>
+    <div class="card">
+      <h4>Skill tree progression</h4>
+      <p>A branching per-element skill tree unlocks passive perks and advanced moves as players level up their
+      bending from 1 to 100.</p>
+    </div>
+    <div class="card">
+      <h4>Bending armour sets</h4>
+      <p>Element-themed diamond-tier armour, craftable per element, that heals the wearer instead of taking damage
+      from other players when worn as a complete set.</p>
+    </div>
+    <div class="card">
+      <h4>Full admin control panel</h4>
+      <p>A UI-driven scroll (book/menu system) for editing world rules, per-player settings, world presets,
+      move bans, and no-bending zones without commands.</p>
+    </div>
+    <div class="card">
+      <h4>Movesets &amp; slot binding</h4>
+      <p>Players bind moves to hotbar slots with configurable activation bindings, and can save/load whole
+      movesets to switch loadouts quickly.</p>
+    </div>
+  </div>
+
+  <h3 id="installation">Installation requirements</h3>
+  <ul>
+    <li>Both the <b>Behavior Pack</b> and <b>Resource Pack</b> must be applied to the world &mdash; the addon will not
+    function correctly with only one installed.</li>
+    <li>The world must have <b>Beta APIs</b> (experimental scripting) enabled, since the addon runs entirely on the
+    <code>@minecraft/server</code> scripting API rather than vanilla commands.</li>
+    <li>After installing, an operator should run <code>/function op</code> once to receive the <code>staff</code> tag
+    required to open the admin menu.</li>
+  </ul>
+
+  <h3 id="versions">Supported Minecraft versions</h3>
+  <table>
+    <tr><th>Component</th><th>Version</th></tr>
+    <tr><td>Minimum engine version</td><td class="mono">1.21.60</td></tr>
+    <tr><td>Behavior pack format</td><td class="mono">format_version 2</td></tr>
+    <tr><td><code>@minecraft/server</code></td><td class="mono">1.18.0</td></tr>
+    <tr><td><code>@minecraft/server-ui</code></td><td class="mono">1.0.0</td></tr>
+    <tr><td>Addon version</td><td class="mono">2.0.0</td></tr>
+  </table>
+</section>
+
+<section id="getting-started">
+  <h2><span class="num">02</span>Getting Started</h2>
+
+  <h3 id="choosing-element">Choosing your element</h3>
+  <p>On first spawn, players open the <b>Choose Bending Style</b> menu to pick Air, Water, Earth, Fire, or Nonbender.
+  Two world settings change how this works:</p>
+  <ul>
+    <li><b>Bending Choice Final</b> &mdash; once toggled on, a player's element choice is locked in permanently.</li>
+    <li><b>Bending Choice Random</b> &mdash; assigns a random element automatically instead of letting the player pick.</li>
+  </ul>
+  <p>If the Avatar path is enabled for the server (<b>Avatar Publicly Selectable</b>), a player who becomes the Avatar
+  additionally chooses a <b>starting element</b>; the remaining three elements are then unlocked in the traditional
+  cycle order (Air &rarr; Water &rarr; Earth &rarr; Fire) as they progress.</p>
+
+  <h3 id="becoming-bender">Becoming a bender</h3>
+  <p>Choosing an element immediately grants that element's base moveset at level 1. From there, bending level rises
+  through use (see <a href="#progression">Progression System</a>), unlocking further moves and skill tree perks.
+  The Avatar State itself only becomes available at <b>level 75</b>, and is a distinct on/off ability rather than a
+  permanently active form unless the server enables <b>Avatar State Permanent Duration</b>.</p>
+
+  <h3 id="nonbender-gameplay">Non-bender gameplay</h3>
+  <p>Players who don't choose an element (or whose server has bending disabled) play as Nonbenders. Nonbenders are
+  not left without tools: they get a small, distinct kit of four moves built around chi-blocking rather than
+  elemental force &mdash; reflecting bending damage back at attackers, a plain dash, a short-range time-rewind that
+  undoes recent damage, and detection of invisible entities. See <a href="#element-nonbender">Nonbenders</a> in the
+  Bending System section for the full list.</p>
+
+  <h3 id="controls-menus">Controls &amp; menus</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4>Choose Slots</h4>
+      <p>Bind a move to a hotbar slot (1&ndash;9): pick a move in the first column, then pick a slot in the second
+      column. Whatever action you configure for that slot (the "binding") will trigger the bound move while that
+      slot is selected.</p>
+    </div>
+    <div class="card">
+      <h4>Movesets</h4>
+      <p>Save your current slot bindings as a named moveset and reload it later. Useful for keeping a "traveling"
+      set of mobility moves and a separate "combat" set without re-binding every slot by hand.</p>
+    </div>
+  </div>
+</section>
+<section id="bending-system"><h2><span class="num">03</span>Bending System</h2>
+    <div class="element-block" id="element-air" style="--accent:#8ecae6">
+      <h3><span class="dot"></span>Airbending</h3>
+      <p class="lede">Air is the element of freedom. The Air Nomads detached themselves from worldly concerns, and they found peace and freedom.</p>
+      <p class="uses">Airbending favors movement and survival utility over raw damage: dashes, launches, scooters, spirit form and crowd-control pushes and pulls. It trades hard-hitting combat tools for the best mobility kit in the addon.</p>
+      <div class="move-grid">
+        <div class="move-card" style="--accent:#8ecae6">
+          <div class="move-card-head">
+            <span class="move-name">Air Ball</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Blasts a slow-moving ball of air that does high damage and explodes on impact.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 65 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 17.0 dmg (Medium Plus)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#8ecae6">
+          <div class="move-card-head">
+            <span class="move-name">Air Blast</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Blasts a focused shot of air that does damage and knockback.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 22 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 17.0 dmg (Medium Plus)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#8ecae6">
+          <div class="move-card-head">
+            <span class="move-name">Air Dash</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Dash forward with force. Look at a wall or player within 50 blocks to pull yourself to them with an impact burst, look straight down to slam into the ground, or dash forward if nothing's in range.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 50 chi</span>
+            <span><b>Cooldown</b> 18s</span>
+            <span><b>Damage</b> 9.7 dmg (Light)</span>
+            <span><b>Unlock</b> Skill: air slam</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#8ecae6">
+          <div class="move-card-head">
+            <span class="move-name">Air Launch</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Launch yourself into the air with a gust of wind - about 12 blocks!</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 50 chi</span>
+            <span><b>Cooldown</b> 15s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#8ecae6">
+          <div class="move-card-head">
+            <span class="move-name">Air Leap</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Leap forward with a burst of air, about 5 blocks forward. Using with an elytra will give you a boost.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 20 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#8ecae6">
+          <div class="move-card-head">
+            <span class="move-name">Air Pull</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Pull entities towards you with a gust of air, with a range of around 32 blocks.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 50 chi</span>
+            <span><b>Cooldown</b> 15s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#8ecae6">
+          <div class="move-card-head">
+            <span class="move-name">Air Rush</span>
+            <span class="move-tag">Duration</span>
+          </div>
+          <p class="move-desc">As long as you have chi, you can rush in any direction on a burst of air.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 1 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 9.7 dmg (Light)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#8ecae6">
+          <div class="move-card-head">
+            <span class="move-name">Air Scooter</span>
+            <span class="move-tag">Duration</span>
+          </div>
+          <p class="move-desc">Create a ball of air that you can ride around on. It's a bit slow, but it's fun!</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 0.1 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#8ecae6">
+          <div class="move-card-head">
+            <span class="move-name">Air Shockwave</span>
+            <span class="move-tag">Charge</span>
+          </div>
+          <p class="move-desc">Charge up a shockwave of air that does damage and knockback in a large area, and shoots out 4 trailing blasts.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 5 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 19.4 dmg (Heavy)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#8ecae6">
+          <div class="move-card-head">
+            <span class="move-name">Air Sniper</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Shoot a focused shot of air that does high damage and knockback, but the damage starts at 0 and increases the farther the shot travels.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 60 chi</span>
+            <span><b>Cooldown</b> 30s</span>
+            <span><b>Damage</b> 19.4 dmg (Heavy)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#8ecae6">
+          <div class="move-card-head">
+            <span class="move-name">Air Spirit</span>
+            <span class="move-tag">Duration</span>
+          </div>
+          <p class="move-desc">Enter your spirit form (spectator mode) and fly around as a spirit. You can't interact with the world, but you can see everything! If you fly more than 32 blocks away from your body, you'll be teleported back to it. If you re-enter your body, you'll be brought back into your normal form. If somebody hits your body (your 'spirit marker') while you're in spirit form, you'll be brought back into your normal form.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 0.25 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill: air spirit</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#8ecae6">
+          <div class="move-card-head">
+            <span class="move-name">Artillery</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Shoot a blast of air with slight curve and homing that does damage and knockback in a 3 block area.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 50 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 14.5 dmg (Medium)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#8ecae6">
+          <div class="move-card-head">
+            <span class="move-name">Puff</span>
+            <span class="move-tag">Duration</span>
+          </div>
+          <p class="move-desc">Generate a continuous puff of air that pushes entities away from you. Great for crowd control! If you're sneaking, it will pull entities towards you instead.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 4 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill: air puff</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#8ecae6">
+          <div class="move-card-head">
+            <span class="move-name">Scorpion Strike</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Shoot a curving air blast into the sky that comes back down on homing in on your enemies!</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 50 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 17.0 dmg (Medium Plus)</span>
+            <span><b>Unlock</b> Skill: scorpion strike</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#8ecae6">
+          <div class="move-card-head">
+            <span class="move-name">Tornado</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Create a tornado of air that does damage and knockback in a 2 block area.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 75 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 9.7 dmg (Light)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#8ecae6">
+          <div class="move-card-head">
+            <span class="move-name">Wall Shot</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Shoot a focused shot of air that bounces off walls! Each bounce increases the damage.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 30 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 14.5 dmg (Medium)</span>
+            <span><b>Unlock</b> Skill: wall shot</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="element-block" id="element-water" style="--accent:#219ebc">
+      <h3><span class="dot"></span>Waterbending</h3>
+      <p class="lede">Water is the element of change. The people of the Water Tribes are capable of adapting to many things.</p>
+      <p class="uses">Waterbending is the generalist kit: healing (Focus Heal, Healing Cloud), offense (Torrent, Hydroshock, Tidal Slice), utility (Frost Walker, grapples), and situational bloodbending during a full moon. Not the best at any one thing, but strong everywhere.</p>
+      <div class="move-grid">
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Bloodbending</span>
+            <span class="move-tag">Duration</span>
+          </div>
+          <p class="move-desc">Control entities when the moon is full. You can move them around.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 1 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill: bloodbending</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Focus Heal</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Heal yourself for a small amount of health, and clear some negative status effects.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 50 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill: focused healing</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Frost Breath</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Freeze nearby opponents in place for 3 seconds with a blast of frosty air.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 35 chi</span>
+            <span><b>Cooldown</b> 200s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill: frost breath</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Frost Walker</span>
+            <span class="move-tag">Duration</span>
+          </div>
+          <p class="move-desc">Basically the frost walker enchantment, but in a move! Walk on water and freeze it as you go.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 0.2 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Geyser</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Launch yourself into the air with a geyser of water, about 10 blocks!</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 10 chi</span>
+            <span><b>Cooldown</b> 5s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Gush</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Create a gush of water locks onto the nearest entity and follows them, doing damage and knockback.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 50 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 14.5 dmg (Medium)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Healing Cloud</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Create a cloud of healing that heals you and your allies in a 16 block radius.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 50 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill: healing cloud</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Hydroshock</span>
+            <span class="move-tag">-</span>
+          </div>
+          <p class="move-desc"></p>
+          <div class="move-stats">
+            <span><b>Cost</b> 5 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Ice Big Spike</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Create a spike of ice that does damage and launches entities high into the air, or you if you're standing on it.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 35 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 14.5 dmg (Medium)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Ice Spike Line</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Shoot a line of spikes far out in front of you, doing damage and stunning opponents.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 30 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 14.5 dmg (Medium)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Ice Spikes</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Create a wave of spikes directly in front of you, doing damage and stunning opponents.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 30 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 14.5 dmg (Medium)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Ice Throw</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Form a block of ice that you can shoot at your enemies by punching it, doing damage and knockback.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 50 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 17.0 dmg (Medium Plus)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Jetstream</span>
+            <span class="move-tag">Duration</span>
+          </div>
+          <p class="move-desc">Create a stream of water that pushes entities away from you, or if aimed at the ground, pushes you away from the stream.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 2 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 9.7 dmg (Light)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Splash</span>
+            <span class="move-tag">Charge</span>
+          </div>
+          <p class="move-desc">Form a charged splash of water that does damage and knockback in a 6 block area.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 5 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 19.4 dmg (Heavy)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Tidal Slice</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Slice through your enemies with a wave of water that does damage and a large pushback.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 30 chi</span>
+            <span><b>Cooldown</b> 16s</span>
+            <span><b>Damage</b> 17.0 dmg (Medium Plus)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Torrent</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Shoot a torrent of water at your enemies.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 20 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 9.7 dmg (Light)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Vine Grapple</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Grapple onto blocks, entities, and players with a vine that you can shoot out of your hand. This move has a ton of combos and uses, so experiment with it! If you're in the air and grapple an entity, it's pulled towards you and stalled in the air for a combo (punch it). If you hook down while in the air, you'll shoot to the ground and create a shockwave, which launches</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 50 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 14.5 dmg (Medium)</span>
+            <span><b>Unlock</b> Skill: vine grapple</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#219ebc">
+          <div class="move-card-head">
+            <span class="move-name">Vine Hook</span>
+            <span class="move-tag">Charge</span>
+          </div>
+          <p class="move-desc">Grab onto all nearby entities in a 32 block radius with a poisonous vine, doing damage and pulling them towards you.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 5 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill: vine hook</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="element-block" id="element-earth" style="--accent:#7a9a4e">
+      <h3><span class="dot"></span>Earthbending</h3>
+      <p class="lede">Earth is the element of substance. The people of the Earth Kingdom are diverse and strong. They are persistent and enduring.</p>
+      <p class="uses">Earthbending leans into defense and heavy single hits: walls and shields that block projectiles, spikes and shockwaves for area damage, plus Seismic Sense for vibration-based tracking and Metal Hook / Magma Surge for advanced players. Also doubles as a mining tool via Earth Search and Earth Headbutt.</p>
+      <div class="move-grid">
+        <div class="move-card" style="--accent:#7a9a4e">
+          <div class="move-card-head">
+            <span class="move-name">Butter Barrage</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Summon 4 small blocks of earth that you can shoot at your enemies by punching, doing damage and knockback.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 50 chi</span>
+            <span><b>Cooldown</b> 30s</span>
+            <span><b>Damage</b> 14.5 dmg (Medium)</span>
+            <span><b>Unlock</b> Skill: butter barrage</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#7a9a4e">
+          <div class="move-card-head">
+            <span class="move-name">Earth Big Spike</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Create a large spike of earth that does damage and launches entities high into the air, or you if you're standing on it.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 30 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 14.5 dmg (Medium)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#7a9a4e">
+          <div class="move-card-head">
+            <span class="move-name">Earth Headbutt</span>
+            <span class="move-tag">Duration</span>
+          </div>
+          <p class="move-desc">Dash and smash through walls and enemies alike (headfirst)! Good for quick mining missons.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 8 chi</span>
+            <span><b>Cooldown</b> 20s</span>
+            <span><b>Damage</b> 9.7 dmg (Light)</span>
+            <span><b>Unlock</b> Skill: earth headbutt</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#7a9a4e">
+          <div class="move-card-head">
+            <span class="move-name">EarthHurl</span>
+            <span class="move-tag">-</span>
+          </div>
+          <p class="move-desc"></p>
+          <div class="move-stats">
+            <span><b>Cost</b> 50 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 17.0 dmg (Medium Plus)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#7a9a4e">
+          <div class="move-card-head">
+            <span class="move-name">Earth Pillar</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Create a pillar of earth that does damage and knockback, or lifts you up if you're standing on it.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 15 chi</span>
+            <span><b>Cooldown</b> 5s</span>
+            <span><b>Damage</b> 9.7 dmg (Light)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#7a9a4e">
+          <div class="move-card-head">
+            <span class="move-name">Earth Rend</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Create a fissure in the earth in front of your feet to trap opponents underground.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 20 chi</span>
+            <span><b>Cooldown</b> 50s</span>
+            <span><b>Damage</b> 19.4 dmg (Heavy)</span>
+            <span><b>Unlock</b> Skill: earth rend</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#7a9a4e">
+          <div class="move-card-head">
+            <span class="move-name">Earth Search</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Search the blocks under you (depth of 256) for any kind of ore, even not naturally occurring ones (diamond blocks, for example).</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 5 chi</span>
+            <span><b>Cooldown</b> 25s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#7a9a4e">
+          <div class="move-card-head">
+            <span class="move-name">Earth Shield</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Create a shield of earth around you that blocks projectiles and entities.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 100 chi</span>
+            <span><b>Cooldown</b> 50s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#7a9a4e">
+          <div class="move-card-head">
+            <span class="move-name">EarthShockwave</span>
+            <span class="move-tag">-</span>
+          </div>
+          <p class="move-desc"></p>
+          <div class="move-stats">
+            <span><b>Cost</b> 1 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#7a9a4e">
+          <div class="move-card-head">
+            <span class="move-name">Earth Spike Line</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Shoot a line of spikes far out in front of you, doing damage and stunning opponents.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 30 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 14.5 dmg (Medium)</span>
+            <span><b>Unlock</b> Skill: earth spike line</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#7a9a4e">
+          <div class="move-card-head">
+            <span class="move-name">Earth Spikes</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Spread a wave of spikes directly in front of you, doing damage and stunning opponents.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 30 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 17.0 dmg (Medium Plus)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#7a9a4e">
+          <div class="move-card-head">
+            <span class="move-name">Earth Top</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Escape caves and other tight spaces by burrowing to the surface! Takes you to the highest block above you.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 10 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#7a9a4e">
+          <div class="move-card-head">
+            <span class="move-name">Earth Wall</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Create a wall of earth in front of you that blocks projectiles and entities.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 25 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 19.4 dmg (Heavy)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#7a9a4e">
+          <div class="move-card-head">
+            <span class="move-name">Earthquake</span>
+            <span class="move-tag">Duration</span>
+          </div>
+          <p class="move-desc">Create an actual earthquake that does (minor) damage and knockback in a 20 block area, but serves to slow down (with Slowness II) and disorient your enemies. It lasts for as long as you have chi.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 12 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 14.5 dmg (Medium)</span>
+            <span><b>Unlock</b> Skill: earthquake</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#7a9a4e">
+          <div class="move-card-head">
+            <span class="move-name">Magma Surge</span>
+            <span class="move-tag">Charge</span>
+          </div>
+          <p class="move-desc">Create a shockwave of magma that rapidly expands outwards up to 9 blocks, dealing damage and knockback to entities in its path. It lasts for 3 seconds, and while charging it entities are pulled towards the center of the shockwave.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 2 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 17.0 dmg (Medium Plus)</span>
+            <span><b>Unlock</b> Skill: magma surge</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#7a9a4e">
+          <div class="move-card-head">
+            <span class="move-name">Metal Hook</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Grapple onto blocks, entities, and players with a metal hook that you can shoot out of your hand. This move has a ton of combos and uses, so experiment with it! If you're in the air and hook an entity, it's pulled toward you and stalled in the air for a combo (punch it). If you hook down while in the air, you'll shoot to the ground and create a shockwave, which launches mobs into the air. If you then look up and grapple them, you'll pull yourself up towards them and stall in the air for another combo!</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 50 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 14.5 dmg (Medium)</span>
+            <span><b>Unlock</b> Skill: metal hook</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#7a9a4e">
+          <div class="move-card-head">
+            <span class="move-name">Seismic Sense</span>
+            <span class="move-tag">Duration</span>
+          </div>
+          <p class="move-desc">See the world around you in a new way, by sensing the vibrations in the earth. This move draws colored lines to the closest 5 entities (in a 48 block radius) around you! The color of the line indicates the entity's type. Red is hostile, green is neutral, blue is items, players are orange, and the rest is yellow!</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 0.1 chi</span>
+            <span><b>Cooldown</b> 1s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill: seismic sense</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="element-block" id="element-fire" style="--accent:#e0592a">
+      <h3><span class="dot"></span>Firebending</h3>
+      <p class="lede">Fire is the element of power. The people of the Fire Nation have desire and will, and the energy and drive to achieve what they want.</p>
+      <p class="uses">Firebending is the highest raw-damage kit in the addon: fireballs, flame waves, and dedicated lightning techniques (Lightning Burst, Lightning Sweep, Thunderclap) that stun or knock back. Fire Boosters and Fire Jump/Leap give it its own mobility answers, at the cost of the defensive tools other elements get.</p>
+      <div class="move-grid">
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Bounce Blast</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Shoot a blast of fire that bounces off walls! Each bounce increases the damage.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 30 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 17.0 dmg (Medium Plus)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">CombustionBeam</span>
+            <span class="move-tag">-</span>
+          </div>
+          <p class="move-desc"></p>
+          <div class="move-stats">
+            <span><b>Cost</b> 3 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Death Slam</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Slam to ground and create a shockwave burst of fire, doing damage and knockback in a 4 block area.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 50 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 17.0 dmg (Medium Plus)</span>
+            <span><b>Unlock</b> Skill: death slam</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Dragon of West</span>
+            <span class="move-tag">Duration</span>
+          </div>
+          <p class="move-desc">...</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 4 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 9.7 dmg (Light)</span>
+            <span><b>Unlock</b> Skill: dragon of the west</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Dragon Strike</span>
+            <span class="move-tag">Dragon</span>
+          </div>
+          <p class="move-desc">Summon a 3 trails of fire that converge on your target, doing damage and setting them on fire.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 75 chi</span>
+            <span><b>Cooldown</b> 30s</span>
+            <span><b>Damage</b> 19.4 dmg (Heavy)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Electroshock</span>
+            <span class="move-tag">Charge</span>
+          </div>
+          <p class="move-desc">Create a shockwave of electricity that does damage and knockback in a 8 block area.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 5 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 17.0 dmg (Medium Plus)</span>
+            <span><b>Unlock</b> Skill: electroshock</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Fire Boosters</span>
+            <span class="move-tag">Duration</span>
+          </div>
+          <p class="move-desc">Lets you fly by shooting out fire! If you ram into entities, it does damage.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 3 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 9.7 dmg (Light)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Fire Charge</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Ignite your spirit mid-fight to gain a burst of extra health!</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 40 chi</span>
+            <span><b>Cooldown</b> 45s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Fire Jump</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Jump high into the air with a burst of fire, about 6 blocks!</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 35 chi</span>
+            <span><b>Cooldown</b> 35s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Fire Leap</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Leap forward with a burst of fire, about 5 blocks forward. Using with an elytra will give you a boost.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 20 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Fire Spread</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Spread a wave of fire directly in front of you, doing damage and setting enemies on fire.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 40 chi</span>
+            <span><b>Cooldown</b> 5s</span>
+            <span><b>Damage</b> 14.5 dmg (Medium)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Fireball</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Shoot a fireball like ghasts do, doing damage and setting enemies on fire.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 10 chi</span>
+            <span><b>Cooldown</b> 5s</span>
+            <span><b>Damage</b> 9.7 dmg (Light)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Flame Aura</span>
+            <span class="move-tag">Duration</span>
+          </div>
+          <p class="move-desc">Create a continuous aura of fire around you that reflects damage and sets the enemies who hit you on fire!</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 2 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 9.7 dmg (Light)</span>
+            <span><b>Unlock</b> Skill: flame aura</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Flame Shot</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Shoot a blast of fire at your enemies, doing damage and setting them on fire.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 35 chi</span>
+            <span><b>Cooldown</b> 2s</span>
+            <span><b>Damage</b> 14.5 dmg (Medium)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Flame Wave</span>
+            <span class="move-tag">Charge</span>
+          </div>
+          <p class="move-desc">Create a wave of fire that does damage and sets enemies on fire in a 8 block area.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 5 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 19.4 dmg (Heavy)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Flash Fire</span>
+            <span class="move-tag">Duration</span>
+          </div>
+          <p class="move-desc">Dash forward and leave a trail of fire in your wake, damaging and knocking back enemies!</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 4 chi</span>
+            <span><b>Cooldown</b> 0s</span>
+            <span><b>Damage</b> 9.7 dmg (Light)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Lightning Burst</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Shoot a burst of lightning that launches you backwards into the air, and does shotgun style damage to entities in front of you.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 30 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 17.0 dmg (Medium Plus)</span>
+            <span><b>Unlock</b> Skill: lightning burst</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">LightningSweep</span>
+            <span class="move-tag">-</span>
+          </div>
+          <p class="move-desc"></p>
+          <div class="move-stats">
+            <span><b>Cost</b> 5 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 19.4 dmg (Heavy)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Scorpion Sting</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Shoot a curving fire shot into the sky that comes back down on homing in on your enemies in a arc pattern!</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 50 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> 17.0 dmg (Medium Plus)</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#e0592a">
+          <div class="move-card-head">
+            <span class="move-name">Thunderclap</span>
+            <span class="move-tag">-</span>
+          </div>
+          <p class="move-desc"></p>
+          <div class="move-stats">
+            <span><b>Cost</b> 5 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill tree</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="element-block" id="element-avatar" style="--accent:#f2c14e">
+      <h3><span class="dot"></span>Avatarbending</h3>
+      <p class="lede">The avatar is the master of all four elements. It is their duty to bring balance to the world.</p>
+      <p class="uses">The Avatar has access to every element's moveset plus the Avatar State itself, unlocked at level 75, and four Supercharged techniques (Air Shove, Earth Shield, Fire Shockwave, Frost Breath) gated behind levels 70 through 100 as the ultimate expression of each element.</p>
+      <div class="move-grid">
+        <div class="move-card" style="--accent:#f2c14e">
+          <div class="move-card-head">
+            <span class="move-name">Avatar State</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Enter or exit the avatar state at will.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 30 chi</span>
+            <span><b>Cooldown</b> 35s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill: avatar state</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#f2c14e">
+          <div class="move-card-head">
+            <span class="move-name">Super Air Shove</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Push the air around you to damage and launch all nearby entities up to 150 blocks away.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 50 chi</span>
+            <span><b>Cooldown</b> 145s</span>
+            <span><b>Damage</b> 26.7 dmg (Ultra)</span>
+            <span><b>Unlock</b> Level 70</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#f2c14e">
+          <div class="move-card-head">
+            <span class="move-name">Super Earth Shield</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Raise a powerful earth barrier that continuously repels all entities around you. Must be grounded.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 70 chi</span>
+            <span><b>Cooldown</b> 145s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Level 80</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#f2c14e">
+          <div class="move-card-head">
+            <span class="move-name">Super Fire Shockwave</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Release a massive blue-fire shockwave with no damage cap that blasts everything around you.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 60 chi</span>
+            <span><b>Cooldown</b> 145s</span>
+            <span><b>Damage</b> 26.7 dmg (Ultra)</span>
+            <span><b>Unlock</b> Level 90</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#f2c14e">
+          <div class="move-card-head">
+            <span class="move-name">Super Frost Breath</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Exhale a wave of freezing air that locks nearby players and slows mobs in place. Requires water.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 50 chi</span>
+            <span><b>Cooldown</b> 145s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Level 100</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="element-block" id="element-dark_avatar" style="--accent:#9b5de5">
+      <h3><span class="dot"></span>Dark Avatarbending</h3>
+      <p class="lede">A corrupted Avatar with destructive spiritual power.</p>
+      <p class="uses">Dark Avatar is a separate, unstable moveset built around control and devastation: Chaos Beam, Singularity, Supernova, and a set of Supercharged techniques (Burrow, Firewall, Tsunami, Typhoon) layered on top of a handful of borrowed core moves like Flame Aura and Seismic Sense.</p>
+      <div class="move-grid">
+        <div class="move-card" style="--accent:#9b5de5">
+          <div class="move-card-head">
+            <span class="move-name">ChaosBeam</span>
+            <span class="move-tag">-</span>
+          </div>
+          <p class="move-desc"></p>
+          <div class="move-stats">
+            <span><b>Cost</b> 3 chi</span>
+            <span><b>Cooldown</b> 13s</span>
+            <span><b>Damage</b> 26.7 dmg (Ultra)</span>
+            <span><b>Unlock</b> Level 75</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#9b5de5">
+          <div class="move-card-head">
+            <span class="move-name">ElementalTyphoon</span>
+            <span class="move-tag">-</span>
+          </div>
+          <p class="move-desc"></p>
+          <div class="move-stats">
+            <span><b>Cost</b> 85 chi</span>
+            <span><b>Cooldown</b> 20s</span>
+            <span><b>Damage</b> 26.7 dmg (Ultra)</span>
+            <span><b>Unlock</b> Level 70</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#9b5de5">
+          <div class="move-card-head">
+            <span class="move-name">Singularity</span>
+            <span class="move-tag">-</span>
+          </div>
+          <p class="move-desc"></p>
+          <div class="move-stats">
+            <span><b>Cost</b> 4 chi</span>
+            <span><b>Cooldown</b> 50s</span>
+            <span><b>Damage</b> 26.7 dmg (Ultra)</span>
+            <span><b>Unlock</b> Level 80</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#9b5de5">
+          <div class="move-card-head">
+            <span class="move-name">Super Burrow</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Sink all nearby enemies 4 blocks into the ground, trapping them below the surface.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 60 chi</span>
+            <span><b>Cooldown</b> 145s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Level 70</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#9b5de5">
+          <div class="move-card-head">
+            <span class="move-name">Super Firewall</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Unleash three successive fire shockwaves that blast and ignite everything in range. Blue flames at level 100.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 60 chi</span>
+            <span><b>Cooldown</b> 145s</span>
+            <span><b>Damage</b> 26.7 dmg (Ultra)</span>
+            <span><b>Unlock</b> Level 80</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#9b5de5">
+          <div class="move-card-head">
+            <span class="move-name">Super Tsunami</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Summon an expanding wave of water that grows in radius, dealing damage to all caught in it.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 60 chi</span>
+            <span><b>Cooldown</b> 145s</span>
+            <span><b>Damage</b> 26.7 dmg (Ultra)</span>
+            <span><b>Unlock</b> Level 90</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#9b5de5">
+          <div class="move-card-head">
+            <span class="move-name">Super Typhoon</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Fire a travelling tornado that pulls and damages any entity it passes through.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 60 chi</span>
+            <span><b>Cooldown</b> 145s</span>
+            <span><b>Damage</b> 26.7 dmg (Ultra)</span>
+            <span><b>Unlock</b> Level 100</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#9b5de5">
+          <div class="move-card-head">
+            <span class="move-name">Supernova</span>
+            <span class="move-tag">-</span>
+          </div>
+          <p class="move-desc"></p>
+          <div class="move-stats">
+            <span><b>Cost</b> 5 chi</span>
+            <span><b>Cooldown</b> 55s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Level 85</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="element-block" id="element-nonbender" style="--accent:#b0a99f">
+      <h3><span class="dot"></span>Nonbenderbending</h3>
+      <p class="lede">Nonbenders are people who are not born with the ability to bend an element. They are still capable of great things.</p>
+      <p class="uses">Nonbenders trade elemental power for chi-blocking style utility: a bending-damage reflect (Boomerang), a plain dash, a Rewind that undoes recent damage, and Truesight to reveal invisible entities.</p>
+      <div class="move-grid">
+        <div class="move-card" style="--accent:#b0a99f">
+          <div class="move-card-head">
+            <span class="move-name">Boomerang</span>
+            <span class="move-tag">Duration</span>
+          </div>
+          <p class="move-desc">While the move is active, all damage you receive *from bending* is reflected back to the entity that dealt it. The move lasts for 5 seconds, and has a cooldown of 15 seconds.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 2.4 chi</span>
+            <span><b>Cooldown</b> 60s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill: boomerang</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#b0a99f">
+          <div class="move-card-head">
+            <span class="move-name">Dash</span>
+            <span class="move-tag">Standard</span>
+          </div>
+          <p class="move-desc">Quickly dash forward 5 blocks.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 30 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill: dash</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#b0a99f">
+          <div class="move-card-head">
+            <span class="move-name">Rewind</span>
+            <span class="move-tag">Duration</span>
+          </div>
+          <p class="move-desc">Rewind your position to where you were when you activated the move after 3 seconds, recovering all damage received in the meantime.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 1.6 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill: rewind</span>
+          </div>
+        </div>
+        <div class="move-card" style="--accent:#b0a99f">
+          <div class="move-card-head">
+            <span class="move-name">Truesight</span>
+            <span class="move-tag">Duration</span>
+          </div>
+          <p class="move-desc">See invisible entities and players while the move is active.</p>
+          <div class="move-stats">
+            <span><b>Cost</b> 1 chi</span>
+            <span><b>Cooldown</b> 10s</span>
+            <span><b>Damage</b> No direct damage</span>
+            <span><b>Unlock</b> Skill: truesight</span>
+          </div>
+        </div>
+      </div>
+    </div></section>
+<section id="ability-reference">
+  <h2><span class="num">04</span>Ability Reference</h2>
+  <p>Every move in the addon, pulled directly from its script definition. Filter by element or search by name.
+  <b>Damage</b> shows the base damage tier before any armour, resistance skills, or level scaling are applied.</p>
+
+  <div class="ref-controls" id="ref-chips">
+    <input class="ref-search" id="ref-search" type="text" placeholder="Search moves by name or description...">
+  </div>
+  <div class="ref-controls" id="ref-chip-row"></div>
+  <div class="ref-count" id="ref-count"></div>
+  <div class="ref-wrap">
+    <table id="ref-table">
+      <thead>
+        <tr>
+          <th>#</th><th>Name</th><th>Element</th><th>Type</th><th>Cost</th>
+          <th>Cooldown</th><th>Damage</th><th>Unlock</th><th>Description</th>
+        </tr>
+      </thead>
+      <tbody id="ref-body"></tbody>
+    </table>
+  </div>
+
+  <h3>Example entry: Earth Wall</h3>
+  <div class="card" style="border-left:3px solid var(--earth)">
+    <p><b>Name:</b> Earth Wall<br>
+    <b>Element:</b> Earth &nbsp;&bull;&nbsp; <b>Type:</b> Standard<br>
+    <b>Description:</b> Create a wall of earth in front of you that blocks projectiles and entities.<br>
+    <b>Cost:</b> 25 chi &nbsp;&bull;&nbsp; <b>Cooldown:</b> 10s<br>
+    <b>Damage:</b> 19.4 (Heavy tier) to anything caught as the wall rises<br>
+    <b>Unlock:</b> Earth skill tree<br>
+    <b>Usage tip:</b> Sneak to trigger the raise; it pulls nearby surface blocks upward into a temporary wall, so it
+    works best over natural ground rather than open air or water.</p>
+  </div>
+</section>
+
+<section id="progression">
+  <h2><span class="num">05</span>Progression System</h2>
+
+  <h3>XP &amp; Levels</h3>
+  <p>Bending level runs from <b>1 to 100</b> and increases through use &mdash; landing hits, using moves, and staying
+  in combat all feed level progress. Two admin-configurable multipliers control the pace server-wide:</p>
+  <ul>
+    <li><b>Bending Level Speed</b> &mdash; multiplier on how fast players gain bending levels (default 1.0).</li>
+    <li><b>Bending Speed</b> &mdash; multiplier on chi regeneration per tick (default 1.0).</li>
+  </ul>
+
+  <h3>Skill trees</h3>
+  <p>Each element has its own branching skill tree of passive perks and unlockable moves (for example, Air's tree
+  branches from a <i>Core</i> node through <i>Warrior's Spirit</i>, <i>Chi Infusion</i>, <i>Twinkle Toes</i> and
+  <i>Airflow</i> branches, ending in leaf perks like Redirection, Wind Dash, or Air Spirit). Some perks apply passive
+  gameplay changes directly, such as disabling fall damage or hunger, or turning off mob aggro.</p>
+  <p>Admins can toggle <b>Skill Tree Fully Unlockable</b> to let players unlock every node regardless of level, which
+  is also what the built-in <i>Combat Features</i> world preset does automatically for everyone on the server.</p>
+
+  <h3>Unlocking abilities</h3>
+  <p>Most moves unlock by progressing through the relevant element's skill tree. A handful of high-level techniques
+  unlock purely by <b>bending level</b> instead &mdash; this is how the Avatar's Supercharged moves and the Dark Avatar's
+  signature techniques are gated:</p>
+  <table>
+    <tr><th>Move</th><th>Path</th><th>Level required</th></tr>
+    <tr><td>Super Air Shove</td><td>Avatar</td><td>70</td></tr>
+    <tr><td>Elemental Typhoon</td><td>Dark Avatar</td><td>70</td></tr>
+    <tr><td>Super Burrow</td><td>Dark Avatar</td><td>70</td></tr>
+    <tr><td>Chaos Beam</td><td>Dark Avatar</td><td>75</td></tr>
+    <tr><td>Super Earth Shield</td><td>Avatar</td><td>80</td></tr>
+    <tr><td>Singularity</td><td>Dark Avatar</td><td>80</td></tr>
+    <tr><td>Super Firewall</td><td>Dark Avatar</td><td>80</td></tr>
+    <tr><td>Supernova</td><td>Dark Avatar</td><td>85</td></tr>
+    <tr><td>Super Fire Shockwave</td><td>Avatar</td><td>90</td></tr>
+    <tr><td>Super Tsunami</td><td>Dark Avatar</td><td>90</td></tr>
+    <tr><td>Super Frost Breath</td><td>Avatar</td><td>100</td></tr>
+    <tr><td>Super Typhoon</td><td>Dark Avatar</td><td>100</td></tr>
+  </table>
+
+  <h3>Mastery</h3>
+  <p>The Avatar State itself is unlocked as a distinct <code>skill_required</code> gate (<code>avatar_state</code>) at
+  level 75, and its duration scales between the server's configured minimum (at level 75) and maximum (at level 100)
+  unless <b>Avatar State Permanent Duration</b> is enabled, in which case it no longer expires on its own. Servers
+  can also enable an <b>Avatar State Resurrection</b> effect with its own cooldown, acting as a totem-style save
+  while the Avatar State is active.</p>
+</section>
+
+<section id="armour">
+  <h2><span class="num">06</span>Armour &amp; Equipment</h2>
+
+  <h3>Bending armour</h3>
+  <p>Each of the four core elements has a full diamond-tier armour set (helmet, chestplate, leggings, boots) themed
+  to that element. Wearing a <b>complete set of four pieces from the same bending-armour namespace</b> grants a
+  powerful defensive effect: incoming player damage (excluding magic-type damage) is fully absorbed and converted
+  into healing instead, along with a block sound and particle effect. Mixing bending armour with any vanilla or
+  unrelated piece breaks the set bonus.</p>
+
+  <h3>Crafting recipes</h3>
+  <p>Every bending armour piece is crafted at a crafting table from its matching vanilla diamond armour piece plus
+  element-flavoured materials:</p>
+  <table>
+    <tr><th>Element</th><th>Key materials</th><th>Base piece</th></tr>
+    <tr><td>Air</td><td>Orange Wool, Red Wool, Brown Wool</td><td>Diamond armour</td></tr>
+    <tr><td>Water</td><td>Ice, Packed Ice</td><td>Diamond armour</td></tr>
+    <tr><td>Earth</td><td>Obsidian, Amethyst Shard</td><td>Diamond armour</td></tr>
+    <tr><td>Fire</td><td>Netherrack, Magma Block</td><td>Diamond armour</td></tr>
+  </table>
+  <p>For example, the Earth Helmet uses a shaped recipe of Obsidian around a Diamond Helmet. An Airbender's Glider
+  item also has its own dedicated crafting recipe.</p>
+
+  <h3>Effects</h3>
+  <ul>
+    <li><b>Full-set healing reflect</b> &mdash; the headline bending armour effect described above.</li>
+    <li>The effect only triggers against damage dealt by another player, and is bypassed by magic-type damage.</li>
+  </ul>
+
+  <h3>Tea &amp; consumables</h3>
+  <p>The addon also adds a full tea-brewing item set (crafted using a Water Cup as a base ingredient), with dozens
+  of variants, each carrying a different buff:</p>
+  <table>
+    <tr><th>Item</th><th>Effect</th></tr>
+    <tr><td>Jasmine Tea / Cold Jasmine Tea</td><td>Regeneration</td></tr>
+    <tr><td>Nomad Tea, Spirit Tea (+ cold variants)</td><td>Slow Falling, Jump Boost, Speed</td></tr>
+    <tr><td>Ginger / Ginseng / Oolong Tea (+ cold variants)</td><td>Absorption</td></tr>
+    <tr><td>Chi Tea / Cold Chi Tea</td><td>Restores 50 / 25 chi and clears Slowness &amp; Weakness</td></tr>
+    <tr><td>Red-Blooded Nephew Tea (+ cold variant)</td><td>Random Strength or Weakness</td></tr>
+    <tr><td>White Jade Tea (+ cold variant)</td><td>Fatal Poison</td></tr>
+    <tr><td>White Dragon Tea (+ cold variant)</td><td>Cures Fatal Poison, grants Regeneration + Absorption</td></tr>
+  </table>
+</section>
+
+<section id="admin-guide">
+  <h2><span class="num">07</span>Admin Guide</h2>
+
+  <p>Server operators run <code>/function op</code> once to receive the <code>staff</code> tag, which grants access
+  to the Admin Settings menu. Everything below is configured through that in-game UI &mdash; no commands required
+  after the initial setup.</p>
+
+  <h3>Admin commands</h3>
+  <table>
+    <tr><th>Function</th><th>Effect</th></tr>
+    <tr><td class="mono">/function op</td><td>Grants the current player the <code>staff</code> tag needed to open the admin menu.</td></tr>
+    <tr><td class="mono">/function auto_run</td><td>Internal tick/setup function run automatically by the addon; not intended to be run manually.</td></tr>
+  </table>
+
+  <h3>Configuration options (Basic World Settings)</h3>
+  <table>
+    <tr><th>Setting</th><th>Description</th></tr>
+    <tr><td>Bending Enabled (Global)</td><td>Master switch for bending on the whole server.</td></tr>
+    <tr><td>Set Homes Enabled</td><td>Enables the player homes system.</td></tr>
+    <tr><td>Auto Clear TNT / TNT Minecarts</td><td>Periodically removes TNT entities, while preserving TNT that existed in the world before the addon started tracking it.</td></tr>
+    <tr><td>Auto Clear Maps</td><td>Clears map items, including from player inventories.</td></tr>
+    <tr><td>Auto Clear Creaking Hearts / Sculk Catalysts / Admin Items</td><td>Additional world-cleanup toggles for lag-prone blocks and leftover admin items.</td></tr>
+    <tr><td>Keep Inventory (Toggle)</td><td>Server-side keep-inventory rule.</td></tr>
+    <tr><td>Lock Nether / Lock End / Dimension Lock</td><td>Restrict travel to specific dimensions.</td></tr>
+    <tr><td>Bending Choice Final / Random</td><td>Locks element choice permanently, or assigns elements randomly.</td></tr>
+    <tr><td>Avatar Publicly Selectable</td><td>Allows players to choose the Avatar element themselves.</td></tr>
+    <tr><td>Avatar Reset On Death (Avatar State)</td><td>Resets the Avatar's progress if they die while in the Avatar State.</td></tr>
+    <tr><td>Avatar State Permanent Duration</td><td>Removes the timer on the Avatar State entirely.</td></tr>
+    <tr><td>Avatar State Duration (Lvl 75 / Lvl 100)</td><td>Minimum and maximum Avatar State duration in seconds, scaled by level between these two values.</td></tr>
+    <tr><td>Avatar State Resurrection + Cooldown</td><td>Totem-like save effect while in the Avatar State, with its own cooldown.</td></tr>
+    <tr><td>Block Perfect / Good Window (min/max, ticks) + Cooldown (ms)</td><td>Tuning for the timing-based blocking system.</td></tr>
+    <tr><td>Redirection Cooldown (ms)</td><td>Cooldown for the Redirection skill tree perk.</td></tr>
+    <tr><td>Skill Tree Fully Unlockable</td><td>Lets players unlock every skill tree node regardless of level.</td></tr>
+    <tr><td>Bending Speed</td><td>Chi regeneration multiplier (default 1.0).</td></tr>
+    <tr><td>Bending Level Speed</td><td>Bending level-up speed multiplier (default 1.0).</td></tr>
+  </table>
+
+  <h3>Player settings</h3>
+  <table>
+    <tr><th>Action</th><th>Effect</th></tr>
+    <tr><td>Change Level</td><td>Directly sets a player's bending level, which also affects their chi regeneration and available moves.</td></tr>
+    <tr><td>Change Style</td><td>Reassigns a player's bending element.</td></tr>
+    <tr><td>See Inventory</td><td>Views a player's current inventory.</td></tr>
+    <tr><td>Clear / View Ender Chest</td><td>Views or wipes a target player's ender chest.</td></tr>
+    <tr><td>Reset Player</td><td>Resets a player's skill tree, style, and all moves back to default.</td></tr>
+    <tr><td>Give / Remove Infinite Chi</td><td>Grants unlimited chi, letting a player spam every move with no chi cost. The menu itself warns this can cause serious server lag if overused, especially with multiple players or particle-heavy moves.</td></tr>
+  </table>
+
+  <h3>Permissions</h3>
+  <p>Access to the admin menu is gated by the <code>staff</code> tag, granted via <code>/function op</code>. There is
+  no separate permission tiering beyond this tag in the current build &mdash; anyone holding it has full access to
+  world settings, player settings, presets, and move/element bans.</p>
+
+  <h3>Ban moves, elements &amp; zones</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4>Ban Moves / Ban Elements</h4>
+      <p>Disable specific individual moves or entire elements server-wide from a selection menu.</p>
+    </div>
+    <div class="card">
+      <h4>Non-bending Zones</h4>
+      <p>Create, edit, or delete zones where bending is restricted. Inside a zone you can ban specific moves only;
+      if no moves are explicitly banned in a zone, all bending is disabled there by default.</p>
+    </div>
+  </div>
+
+  <h3>World presets</h3>
+  <table>
+    <tr><th>Preset</th><th>Effect</th></tr>
+    <tr><td>Standard Features</td><td>The addon's default configuration. Re-applying it resets world-level settings without touching already-affected players.</td></tr>
+    <tr><td>Combat Features</td><td>Fully unlocks all players' skill trees (current and future), sets everyone to level 100, gives everyone every move, shrinks the world border, and disables homes.</td></tr>
+    <tr><td>Server Features</td><td>Enables every element except the Avatar, sets a very large 100,000-block world border, and enables homes and teams.</td></tr>
+  </table>
+
+  <h3>Debug tools</h3>
+  <p>The admin menu includes a dedicated <b>Debug</b> entry point for addon-side diagnostics, alongside the player
+  and world tooling above.</p>
+</section>
+
+<section id="developer-docs">
+  <h2><span class="num">08</span>Developer Documentation</h2>
+
+  <h3>Script structure</h3>
+  <p>All gameplay logic lives under <code class="mono">BP/scripts/avatar/</code>:</p>
+  <pre class="card mono" style="overflow-x:auto; white-space:pre;">
+avatar/
+  index.js            entry point: subscribes every world/system event
+  utils.js            shared helpers (vectors, damage, tracing, block sets)
+  damageTiers.js       DAMAGE_TIERS constants used by every move
+  core/
+    elements/
+      import.js         aggregates all element definitions
+      &lt;element&gt;/
+        &lt;element&gt;.js    element definition: name, moves[], skillTree, runtime
+        moves/*.js        one file per move
+        trees/main.js     skill tree definition
+        runtimes/*        per-tick element runtime logic
+    player/
+      bender.js         per-tick bender runtime (chi, cooldowns, level gating)
+      setup.js          player data initialization, level/state persistence
+      load.js           load hooks
+      hud.js            HUD rendering
+    events/             one file per subscribed Minecraft script event
+    scroll/             all server-ui menu screens (admin, skill tree, slots...)
+    quests/             quest definitions
+    tutorial/           in-game tutorial steps
+</pre>
+
+  <h3>Adding new moves</h3>
+  <p>Every move file exports a single <code>move</code> object with a consistent shape:</p>
+  <pre class="card mono" style="overflow-x:auto; white-space:pre;">
+const move = {
+    name: { translate: 'elements.&lt;element&gt;.moves.&lt;key&gt;.name' },
+    description: { translate: 'elements.&lt;element&gt;.moves.&lt;key&gt;.description' },
+
+    cost: 25,          // chi cost
+    cooldown: 10,       // seconds
+    type: 'standard',   // standard | duration | charge | dragon
+    id: 29,             // unique numeric id across the whole addon
+
+    tier: 'HEAVY',      // key into DAMAGE_TIERS
+    damage: {
+        base: DAMAGE_TIERS.HEAVY,
+        multiplied: 0
+    },
+
+    // optional gating, used mainly by Avatar / Dark Avatar moves:
+    // level_required: 70,
+    // skill_required: 'avatar_state',
+
+    activate(player, PLAYER_DATA) {
+        // move logic: particles, entity queries, applyBendingDamage, etc.
+    }
+}
+
+export default move;
+</pre>
+  <p>New moves are registered by importing them into the relevant <code>&lt;element&gt;.js</code> file's
+  <code>moves</code> array, and adding matching name/description keys to <code>en_US.lang</code> (and any other
+  supported languages).</p>
+
+  <h3>Adding elements</h3>
+  <p>An element is defined the same way <code>dark_avatar.js</code> composes borrowed moves from other elements
+  alongside its own: an object with <code>name</code>, <code>description</code>, <code>breakdown</code>,
+  <code>color</code>, <code>icon</code>, a <code>chiCode</code>/<code>chiCodeOverflow</code> pair, a
+  <code>moves</code> array, a <code>skillTree</code>, and a <code>runtime</code> function called every tick. New
+  elements are then registered in <code>core/elements/import.js</code>.</p>
+
+  <h3>Custom components</h3>
+  <p>Bending armour relies on standard <code>minecraft:equippable</code> item components plus a namespace check
+  (<code>pv:</code>) done in script rather than a custom vanilla component &mdash; see
+  <code>core/events/entityHurt.js</code>'s <code>isWieldingDensityOrBreachWeapon</code>-style helper pattern for how
+  full four-piece sets are detected each hit.</p>
+
+  <h3>API usage</h3>
+  <p>The addon subscribes to the following <code>@minecraft/server</code> world/system events from
+  <code>index.js</code>:</p>
+  <table>
+    <tr><th>Event</th><th>Used for</th></tr>
+    <tr><td class="mono">scriptEventReceive</td><td>Custom scripted commands / debug triggers</td></tr>
+    <tr><td class="mono">playerBreakBlock (before)</td><td>Mining-related move interactions</td></tr>
+    <tr><td class="mono">itemUse / itemCompleteUse / itemStartUse / itemReleaseUse / itemStopUse</td><td>Tea items, water cups, held-item based moves</td></tr>
+    <tr><td class="mono">entityHurt</td><td>Bending armour set-bonus healing reflect</td></tr>
+    <tr><td class="mono">entityHitEntity / entityHitBlock</td><td>Melee-triggered move logic</td></tr>
+    <tr><td class="mono">playerDimensionChange</td><td>Dimension lock enforcement</td></tr>
+    <tr><td class="mono">entitySpawn / entityDie</td><td>Mob-related cleanup and bending interactions</td></tr>
+    <tr><td class="mono">playerPlaceBlock</td><td>Block-placement based move interactions</td></tr>
+    <tr><td class="mono">playerSpawn</td><td>Player data setup / rejoin handling</td></tr>
+  </table>
+  <p>Shared utility functions in <code>utils.js</code> include vector helpers (<code>calcVectorOffset</code>,
+  <code>calculateDistance</code>, <code>calculateKnockbackVector</code>, <code>normalizeVector</code>), a
+  <code>groundBlocks</code> set used by earth-affecting moves, <code>applyBendingDamage</code>, ray tracing
+  (<code>traceLine</code>, <code>isRayClear</code>), bending-resistance calculation, and a
+  <code>delayedFunc</code> tick-delay helper used throughout the move files.</p>
+</section>
+
+<section id="troubleshooting">
+  <h2><span class="num">09</span>Troubleshooting</h2>
+
+  <h3>Common errors</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h4>Admin menu won't open</h4>
+      <p>Run <code>/function op</code> as the player who needs access. This grants the <code>staff</code> tag the
+      menu checks for; without it, the addon shows a "no permission" message.</p>
+    </div>
+    <div class="card">
+      <h4>Missing textures, particles, or UI</h4>
+      <p>Confirm both the Behavior Pack and Resource Pack are applied &mdash; installing only one is the most common
+      cause of missing bending particles, armour textures, or menu icons.</p>
+    </div>
+    <div class="card">
+      <h4>Moves do nothing when used</h4>
+      <p>Check that <b>Beta APIs</b> is enabled for the world. Scripting addons silently fail to load if experimental
+      scripting support isn't turned on.</p>
+    </div>
+    <div class="card">
+      <h4>A move is unusable even though the tree shows it unlocked</h4>
+      <p>Some moves gate on bending <b>level</b> rather than skill tree state (see the Progression System table).
+      Confirm the player's actual level with the admin panel's Change Level screen.</p>
+    </div>
+  </div>
+
+  <h3>Performance fixes</h3>
+  <ul>
+    <li>Avoid granting <b>Infinite Chi</b> to many players at once &mdash; the admin panel itself warns this can cause
+    serious lag or crash the server, especially with particle-heavy moves.</li>
+    <li>Leave the <b>Auto Clear</b> toggles (TNT, TNT minecarts, maps, creaking hearts, sculk catalysts, admin items)
+    enabled on busy servers to prevent entity/block buildup from bending combat.</li>
+    <li>Large <b>World Border</b> values combined with the Server Features preset increase the area the addon has to
+    track; tune the border size to your player count.</li>
+  </ul>
+
+  <h3>Known issues</h3>
+  <ul>
+    <li>Bending armour set bonuses require an exact four-piece match from the same element's armour namespace &mdash;
+    mixing in any vanilla or unrelated piece silently disables the effect rather than partially applying it.</li>
+    <li>No-bending zones disable <i>all</i> bending by default unless specific moves are explicitly banned in that
+    zone instead, which can surprise admins expecting an allow-list.</li>
+  </ul>
+</section>
+
+<section id="credits">
+  <h2><span class="num">10</span>Credits &amp; Community</h2>
+  <p>Avatar Addon 2.0.0 Overhaul is developed and maintained by <b>IBk</b>. This documentation was generated
+  directly from the addon's shipped scripts, language files, and manifests to stay accurate to the actual behavior
+  pack and resource pack contents.</p>
+  <p>Avatar: The Last Airbender and its bending system are the property of their respective owners; this addon is
+  an unofficial fan project for use in Minecraft Bedrock Edition.</p>
+</section>
+
+<div class="footer-note">Generated reference documentation for Avatar Addon 2.0.0 Overhaul. Data reflects the shipped .mcaddon contents at time of writing.</div>
+</main>
+</div>
+
+<script>
+const MOVES = [{"id": "0", "name": "Air Ball", "element": "Air", "elementKey": "air", "desc": "Blasts a slow-moving ball of air that does high damage and explodes on impact.", "cost": "65", "cooldown": "10s", "type": "Standard", "damage": "17.0 dmg (Medium Plus)", "unlock": "Skill tree"}, {"id": "1", "name": "Air Blast", "element": "Air", "elementKey": "air", "desc": "Blasts a focused shot of air that does damage and knockback.", "cost": "22", "cooldown": "10s", "type": "Standard", "damage": "17.0 dmg (Medium Plus)", "unlock": "Skill tree"}, {"id": "2", "name": "Air Launch", "element": "Air", "elementKey": "air", "desc": "Launch yourself into the air with a gust of wind - about 12 blocks!", "cost": "50", "cooldown": "15s", "type": "Standard", "damage": "No direct damage", "unlock": "Skill tree"}, {"id": "3", "name": "Air Leap", "element": "Air", "elementKey": "air", "desc": "Leap forward with a burst of air, about 5 blocks forward. Using with an elytra will give you a boost.", "cost": "20", "cooldown": "10s", "type": "Standard", "damage": "No direct damage", "unlock": "Skill tree"}, {"id": "4", "name": "Air Pull", "element": "Air", "elementKey": "air", "desc": "Pull entities towards you with a gust of air, with a range of around 32 blocks.", "cost": "50", "cooldown": "15s", "type": "Standard", "damage": "No direct damage", "unlock": "Skill tree"}, {"id": "5", "name": "Air Rush", "element": "Air", "elementKey": "air", "desc": "As long as you have chi, you can rush in any direction on a burst of air.", "cost": "1", "cooldown": "10s", "type": "Duration", "damage": "9.7 dmg (Light)", "unlock": "Skill tree"}, {"id": "6", "name": "Air Scooter", "element": "Air", "elementKey": "air", "desc": "Create a ball of air that you can ride around on. It's a bit slow, but it's fun!", "cost": "0.1", "cooldown": "10s", "type": "Duration", "damage": "No direct damage", "unlock": "Skill tree"}, {"id": "7", "name": "Air Shockwave", "element": "Air", "elementKey": "air", "desc": "Charge up a shockwave of air that does damage and knockback in a large area, and shoots out 4 trailing blasts.", "cost": "5", "cooldown": "10s", "type": "Charge", "damage": "19.4 dmg (Heavy)", "unlock": "Skill tree"}, {"id": "8", "name": "Air Dash", "element": "Air", "elementKey": "air", "desc": "Dash forward with force. Look at a wall or player within 50 blocks to pull yourself to them with an impact burst, look straight down to slam into the ground, or dash forward if nothing's in range.", "cost": "50", "cooldown": "18s", "type": "Standard", "damage": "9.7 dmg (Light)", "unlock": "Skill: air slam"}, {"id": "9", "name": "Air Sniper", "element": "Air", "elementKey": "air", "desc": "Shoot a focused shot of air that does high damage and knockback, but the damage starts at 0 and increases the farther the shot travels.", "cost": "60", "cooldown": "30s", "type": "Standard", "damage": "19.4 dmg (Heavy)", "unlock": "Skill tree"}, {"id": "10", "name": "Air Spirit", "element": "Air", "elementKey": "air", "desc": "Enter your spirit form (spectator mode) and fly around as a spirit. You can't interact with the world, but you can see everything! If you fly more than 32 blocks away from your body, you'll be teleported back to it. If you re-enter your body, you'll be brought back into your normal form. If somebody hits your body (your 'spirit marker') while you're in spirit form, you'll be brought back into your normal form.", "cost": "0.25", "cooldown": "10s", "type": "Duration", "damage": "No direct damage", "unlock": "Skill: air spirit"}, {"id": "11", "name": "Artillery", "element": "Air", "elementKey": "air", "desc": "Shoot a blast of air with slight curve and homing that does damage and knockback in a 3 block area.", "cost": "50", "cooldown": "10s", "type": "Standard", "damage": "14.5 dmg (Medium)", "unlock": "Skill tree"}, {"id": "12", "name": "Puff", "element": "Air", "elementKey": "air", "desc": "Generate a continuous puff of air that pushes entities away from you. Great for crowd control! If you're sneaking, it will pull entities towards you instead.", "cost": "4", "cooldown": "10s", "type": "Duration", "damage": "No direct damage", "unlock": "Skill: air puff"}, {"id": "13", "name": "Scorpion Strike", "element": "Air", "elementKey": "air", "desc": "Shoot a curving air blast into the sky that comes back down on homing in on your enemies!", "cost": "50", "cooldown": "10s", "type": "Standard", "damage": "17.0 dmg (Medium Plus)", "unlock": "Skill: scorpion strike"}, {"id": "14", "name": "Tornado", "element": "Air", "elementKey": "air", "desc": "Create a tornado of air that does damage and knockback in a 2 block area.", "cost": "75", "cooldown": "10s", "type": "Standard", "damage": "9.7 dmg (Light)", "unlock": "Skill tree"}, {"id": "15", "name": "Wall Shot", "element": "Air", "elementKey": "air", "desc": "Shoot a focused shot of air that bounces off walls! Each bounce increases the damage.", "cost": "30", "cooldown": "10s", "type": "Standard", "damage": "14.5 dmg (Medium)", "unlock": "Skill: wall shot"}, {"id": "16", "name": "Butter Barrage", "element": "Earth", "elementKey": "earth", "desc": "Summon 4 small blocks of earth that you can shoot at your enemies by punching, doing damage and knockback.", "cost": "50", "cooldown": "30s", "type": "Standard", "damage": "14.5 dmg (Medium)", "unlock": "Skill: butter barrage"}, {"id": "17", "name": "Earth Big Spike", "element": "Earth", "elementKey": "earth", "desc": "Create a large spike of earth that does damage and launches entities high into the air, or you if you're standing on it.", "cost": "30", "cooldown": "10s", "type": "Standard", "damage": "14.5 dmg (Medium)", "unlock": "Skill tree"}, {"id": "18", "name": "Earth Headbutt", "element": "Earth", "elementKey": "earth", "desc": "Dash and smash through walls and enemies alike (headfirst)! Good for quick mining missons.", "cost": "8", "cooldown": "20s", "type": "Duration", "damage": "9.7 dmg (Light)", "unlock": "Skill: earth headbutt"}, {"id": "19", "name": "EarthHurl", "element": "Earth", "elementKey": "earth", "desc": "", "cost": "50", "cooldown": "10s", "type": "-", "damage": "17.0 dmg (Medium Plus)", "unlock": "Skill tree"}, {"id": "20", "name": "Earth Pillar", "element": "Earth", "elementKey": "earth", "desc": "Create a pillar of earth that does damage and knockback, or lifts you up if you're standing on it.", "cost": "15", "cooldown": "5s", "type": "Standard", "damage": "9.7 dmg (Light)", "unlock": "Skill tree"}, {"id": "21", "name": "Earthquake", "element": "Earth", "elementKey": "earth", "desc": "Create an actual earthquake that does (minor) damage and knockback in a 20 block area, but serves to slow down (with Slowness II) and disorient your enemies. It lasts for as long as you have chi.", "cost": "12", "cooldown": "10s", "type": "Duration", "damage": "14.5 dmg (Medium)", "unlock": "Skill: earthquake"}, {"id": "22", "name": "Earth Rend", "element": "Earth", "elementKey": "earth", "desc": "Create a fissure in the earth in front of your feet to trap opponents underground.", "cost": "20", "cooldown": "50s", "type": "Standard", "damage": "19.4 dmg (Heavy)", "unlock": "Skill: earth rend"}, {"id": "23", "name": "Earth Search", "element": "Earth", "elementKey": "earth", "desc": "Search the blocks under you (depth of 256) for any kind of ore, even not naturally occurring ones (diamond blocks, for example).", "cost": "5", "cooldown": "25s", "type": "Standard", "damage": "No direct damage", "unlock": "Skill tree"}, {"id": "24", "name": "Earth Shield", "element": "Earth", "elementKey": "earth", "desc": "Create a shield of earth around you that blocks projectiles and entities.", "cost": "100", "cooldown": "50s", "type": "Standard", "damage": "No direct damage", "unlock": "Skill tree"}, {"id": "25", "name": "EarthShockwave", "element": "Earth", "elementKey": "earth", "desc": "", "cost": "1", "cooldown": "10s", "type": "-", "damage": "No direct damage", "unlock": "Skill tree"}, {"id": "26", "name": "Earth Spike Line", "element": "Earth", "elementKey": "earth", "desc": "Shoot a line of spikes far out in front of you, doing damage and stunning opponents.", "cost": "30", "cooldown": "10s", "type": "Standard", "damage": "14.5 dmg (Medium)", "unlock": "Skill: earth spike line"}, {"id": "27", "name": "Earth Spikes", "element": "Earth", "elementKey": "earth", "desc": "Spread a wave of spikes directly in front of you, doing damage and stunning opponents.", "cost": "30", "cooldown": "10s", "type": "Standard", "damage": "17.0 dmg (Medium Plus)", "unlock": "Skill tree"}, {"id": "28", "name": "Earth Top", "element": "Earth", "elementKey": "earth", "desc": "Escape caves and other tight spaces by burrowing to the surface! Takes you to the highest block above you.", "cost": "10", "cooldown": "10s", "type": "Standard", "damage": "No direct damage", "unlock": "Skill tree"}, {"id": "29", "name": "Earth Wall", "element": "Earth", "elementKey": "earth", "desc": "Create a wall of earth in front of you that blocks projectiles and entities.", "cost": "25", "cooldown": "10s", "type": "Standard", "damage": "19.4 dmg (Heavy)", "unlock": "Skill tree"}, {"id": "30", "name": "Magma Surge", "element": "Earth", "elementKey": "earth", "desc": "Create a shockwave of magma that rapidly expands outwards up to 9 blocks, dealing damage and knockback to entities in its path. It lasts for 3 seconds, and while charging it entities are pulled towards the center of the shockwave.", "cost": "2", "cooldown": "10s", "type": "Charge", "damage": "17.0 dmg (Medium Plus)", "unlock": "Skill: magma surge"}, {"id": "31", "name": "Metal Hook", "element": "Earth", "elementKey": "earth", "desc": "Grapple onto blocks, entities, and players with a metal hook that you can shoot out of your hand. This move has a ton of combos and uses, so experiment with it! If you're in the air and hook an entity, it's pulled toward you and stalled in the air for a combo (punch it). If you hook down while in the air, you'll shoot to the ground and create a shockwave, which launches mobs into the air. If you then look up and grapple them, you'll pull yourself up towards them and stall in the air for another combo!", "cost": "50", "cooldown": "10s", "type": "Standard", "damage": "14.5 dmg (Medium)", "unlock": "Skill: metal hook"}, {"id": "32", "name": "Seismic Sense", "element": "Earth", "elementKey": "earth", "desc": "See the world around you in a new way, by sensing the vibrations in the earth. This move draws colored lines to the closest 5 entities (in a 48 block radius) around you! The color of the line indicates the entity's type. Red is hostile, green is neutral, blue is items, players are orange, and the rest is yellow!", "cost": "0.1", "cooldown": "1s", "type": "Duration", "damage": "No direct damage", "unlock": "Skill: seismic sense"}, {"id": "33", "name": "Bounce Blast", "element": "Fire", "elementKey": "fire", "desc": "Shoot a blast of fire that bounces off walls! Each bounce increases the damage.", "cost": "30", "cooldown": "10s", "type": "Standard", "damage": "17.0 dmg (Medium Plus)", "unlock": "Skill tree"}, {"id": "34", "name": "CombustionBeam", "element": "Fire", "elementKey": "fire", "desc": "", "cost": "3", "cooldown": "10s", "type": "-", "damage": "No direct damage", "unlock": "Skill tree"}, {"id": "35", "name": "Death Slam", "element": "Fire", "elementKey": "fire", "desc": "Slam to ground and create a shockwave burst of fire, doing damage and knockback in a 4 block area.", "cost": "50", "cooldown": "10s", "type": "Standard", "damage": "17.0 dmg (Medium Plus)", "unlock": "Skill: death slam"}, {"id": "36", "name": "Dragon of West", "element": "Fire", "elementKey": "fire", "desc": "...", "cost": "4", "cooldown": "10s", "type": "Duration", "damage": "9.7 dmg (Light)", "unlock": "Skill: dragon of the west"}, {"id": "37", "name": "Dragon Strike", "element": "Fire", "elementKey": "fire", "desc": "Summon a 3 trails of fire that converge on your target, doing damage and setting them on fire.", "cost": "75", "cooldown": "30s", "type": "Dragon", "damage": "19.4 dmg (Heavy)", "unlock": "Skill tree"}, {"id": "38", "name": "Electroshock", "element": "Fire", "elementKey": "fire", "desc": "Create a shockwave of electricity that does damage and knockback in a 8 block area.", "cost": "5", "cooldown": "10s", "type": "Charge", "damage": "17.0 dmg (Medium Plus)", "unlock": "Skill: electroshock"}, {"id": "39", "name": "Fireball", "element": "Fire", "elementKey": "fire", "desc": "Shoot a fireball like ghasts do, doing damage and setting enemies on fire.", "cost": "10", "cooldown": "5s", "type": "Standard", "damage": "9.7 dmg (Light)", "unlock": "Skill tree"}, {"id": "40", "name": "Fire Boosters", "element": "Fire", "elementKey": "fire", "desc": "Lets you fly by shooting out fire! If you ram into entities, it does damage.", "cost": "3", "cooldown": "10s", "type": "Duration", "damage": "9.7 dmg (Light)", "unlock": "Skill tree"}, {"id": "41", "name": "Fire Charge", "element": "Fire", "elementKey": "fire", "desc": "Ignite your spirit mid-fight to gain a burst of extra health!", "cost": "40", "cooldown": "45s", "type": "Standard", "damage": "No direct damage", "unlock": "Skill tree"}, {"id": "42", "name": "Fire Leap", "element": "Fire", "elementKey": "fire", "desc": "Leap forward with a burst of fire, about 5 blocks forward. Using with an elytra will give you a boost.", "cost": "20", "cooldown": "10s", "type": "Standard", "damage": "No direct damage", "unlock": "Skill tree"}, {"id": "43", "name": "Fire Spread", "element": "Fire", "elementKey": "fire", "desc": "Spread a wave of fire directly in front of you, doing damage and setting enemies on fire.", "cost": "40", "cooldown": "5s", "type": "Standard", "damage": "14.5 dmg (Medium)", "unlock": "Skill tree"}, {"id": "44", "name": "Flame Aura", "element": "Fire", "elementKey": "fire", "desc": "Create a continuous aura of fire around you that reflects damage and sets the enemies who hit you on fire!", "cost": "2", "cooldown": "10s", "type": "Duration", "damage": "9.7 dmg (Light)", "unlock": "Skill: flame aura"}, {"id": "45", "name": "Flame Shot", "element": "Fire", "elementKey": "fire", "desc": "Shoot a blast of fire at your enemies, doing damage and setting them on fire.", "cost": "35", "cooldown": "2s", "type": "Standard", "damage": "14.5 dmg (Medium)", "unlock": "Skill tree"}, {"id": "46", "name": "Flame Wave", "element": "Fire", "elementKey": "fire", "desc": "Create a wave of fire that does damage and sets enemies on fire in a 8 block area.", "cost": "5", "cooldown": "10s", "type": "Charge", "damage": "19.4 dmg (Heavy)", "unlock": "Skill tree"}, {"id": "47", "name": "Flash Fire", "element": "Fire", "elementKey": "fire", "desc": "Dash forward and leave a trail of fire in your wake, damaging and knocking back enemies!", "cost": "4", "cooldown": "0s", "type": "Duration", "damage": "9.7 dmg (Light)", "unlock": "Skill tree"}, {"id": "48", "name": "Lightning Burst", "element": "Fire", "elementKey": "fire", "desc": "Shoot a burst of lightning that launches you backwards into the air, and does shotgun style damage to entities in front of you.", "cost": "30", "cooldown": "10s", "type": "Standard", "damage": "17.0 dmg (Medium Plus)", "unlock": "Skill: lightning burst"}, {"id": "49", "name": "LightningSweep", "element": "Fire", "elementKey": "fire", "desc": "", "cost": "5", "cooldown": "10s", "type": "-", "damage": "19.4 dmg (Heavy)", "unlock": "Skill tree"}, {"id": "50", "name": "Scorpion Sting", "element": "Fire", "elementKey": "fire", "desc": "Shoot a curving fire shot into the sky that comes back down on homing in on your enemies in a arc pattern!", "cost": "50", "cooldown": "10s", "type": "Standard", "damage": "17.0 dmg (Medium Plus)", "unlock": "Skill tree"}, {"id": "51", "name": "Thunderclap", "element": "Fire", "elementKey": "fire", "desc": "", "cost": "5", "cooldown": "10s", "type": "-", "damage": "No direct damage", "unlock": "Skill tree"}, {"id": "52", "name": "Boomerang", "element": "Nonbender", "elementKey": "nonbender", "desc": "While the move is active, all damage you receive *from bending* is reflected back to the entity that dealt it. The move lasts for 5 seconds, and has a cooldown of 15 seconds.", "cost": "2.4", "cooldown": "60s", "type": "Duration", "damage": "No direct damage", "unlock": "Skill: boomerang"}, {"id": "53", "name": "Dash", "element": "Nonbender", "elementKey": "nonbender", "desc": "Quickly dash forward 5 blocks.", "cost": "30", "cooldown": "10s", "type": "Standard", "damage": "No direct damage", "unlock": "Skill: dash"}, {"id": "54", "name": "Rewind", "element": "Nonbender", "elementKey": "nonbender", "desc": "Rewind your position to where you were when you activated the move after 3 seconds, recovering all damage received in the meantime.", "cost": "1.6", "cooldown": "10s", "type": "Duration", "damage": "No direct damage", "unlock": "Skill: rewind"}, {"id": "55", "name": "Truesight", "element": "Nonbender", "elementKey": "nonbender", "desc": "See invisible entities and players while the move is active.", "cost": "1", "cooldown": "10s", "type": "Duration", "damage": "No direct damage", "unlock": "Skill: truesight"}, {"id": "56", "name": "Bloodbending", "element": "Water", "elementKey": "water", "desc": "Control entities when the moon is full. You can move them around.", "cost": "1", "cooldown": "10s", "type": "Duration", "damage": "No direct damage", "unlock": "Skill: bloodbending"}, {"id": "57", "name": "Focus Heal", "element": "Water", "elementKey": "water", "desc": "Heal yourself for a small amount of health, and clear some negative status effects.", "cost": "50", "cooldown": "10s", "type": "Standard", "damage": "No direct damage", "unlock": "Skill: focused healing"}, {"id": "58", "name": "Frost Breath", "element": "Water", "elementKey": "water", "desc": "Freeze nearby opponents in place for 3 seconds with a blast of frosty air.", "cost": "35", "cooldown": "200s", "type": "Standard", "damage": "No direct damage", "unlock": "Skill: frost breath"}, {"id": "59", "name": "Frost Walker", "element": "Water", "elementKey": "water", "desc": "Basically the frost walker enchantment, but in a move! Walk on water and freeze it as you go.", "cost": "0.2", "cooldown": "10s", "type": "Duration", "damage": "No direct damage", "unlock": "Skill tree"}, {"id": "60", "name": "Geyser", "element": "Water", "elementKey": "water", "desc": "Launch yourself into the air with a geyser of water, about 10 blocks!", "cost": "10", "cooldown": "5s", "type": "Standard", "damage": "No direct damage", "unlock": "Skill tree"}, {"id": "61", "name": "Gush", "element": "Water", "elementKey": "water", "desc": "Create a gush of water locks onto the nearest entity and follows them, doing damage and knockback.", "cost": "50", "cooldown": "10s", "type": "Standard", "damage": "14.5 dmg (Medium)", "unlock": "Skill tree"}, {"id": "62", "name": "Healing Cloud", "element": "Water", "elementKey": "water", "desc": "Create a cloud of healing that heals you and your allies in a 16 block radius.", "cost": "50", "cooldown": "10s", "type": "Standard", "damage": "No direct damage", "unlock": "Skill: healing cloud"}, {"id": "63", "name": "Hydroshock", "element": "Water", "elementKey": "water", "desc": "", "cost": "5", "cooldown": "10s", "type": "-", "damage": "No direct damage", "unlock": "Skill tree"}, {"id": "64", "name": "Ice Big Spike", "element": "Water", "elementKey": "water", "desc": "Create a spike of ice that does damage and launches entities high into the air, or you if you're standing on it.", "cost": "35", "cooldown": "10s", "type": "Standard", "damage": "14.5 dmg (Medium)", "unlock": "Skill tree"}, {"id": "65", "name": "Ice Spike Line", "element": "Water", "elementKey": "water", "desc": "Shoot a line of spikes far out in front of you, doing damage and stunning opponents.", "cost": "30", "cooldown": "10s", "type": "Standard", "damage": "14.5 dmg (Medium)", "unlock": "Skill tree"}, {"id": "66", "name": "Ice Spikes", "element": "Water", "elementKey": "water", "desc": "Create a wave of spikes directly in front of you, doing damage and stunning opponents.", "cost": "30", "cooldown": "10s", "type": "Standard", "damage": "14.5 dmg (Medium)", "unlock": "Skill tree"}, {"id": "67", "name": "Ice Throw", "element": "Water", "elementKey": "water", "desc": "Form a block of ice that you can shoot at your enemies by punching it, doing damage and knockback.", "cost": "50", "cooldown": "10s", "type": "Standard", "damage": "17.0 dmg (Medium Plus)", "unlock": "Skill tree"}, {"id": "68", "name": "Jetstream", "element": "Water", "elementKey": "water", "desc": "Create a stream of water that pushes entities away from you, or if aimed at the ground, pushes you away from the stream.", "cost": "2", "cooldown": "10s", "type": "Duration", "damage": "9.7 dmg (Light)", "unlock": "Skill tree"}, {"id": "69", "name": "Splash", "element": "Water", "elementKey": "water", "desc": "Form a charged splash of water that does damage and knockback in a 6 block area.", "cost": "5", "cooldown": "10s", "type": "Charge", "damage": "19.4 dmg (Heavy)", "unlock": "Skill tree"}, {"id": "70", "name": "Tidal Slice", "element": "Water", "elementKey": "water", "desc": "Slice through your enemies with a wave of water that does damage and a large pushback.", "cost": "30", "cooldown": "16s", "type": "Standard", "damage": "17.0 dmg (Medium Plus)", "unlock": "Skill tree"}, {"id": "71", "name": "Torrent", "element": "Water", "elementKey": "water", "desc": "Shoot a torrent of water at your enemies.", "cost": "20", "cooldown": "10s", "type": "Standard", "damage": "9.7 dmg (Light)", "unlock": "Skill tree"}, {"id": "72", "name": "Vine Grapple", "element": "Water", "elementKey": "water", "desc": "Grapple onto blocks, entities, and players with a vine that you can shoot out of your hand. This move has a ton of combos and uses, so experiment with it! If you're in the air and grapple an entity, it's pulled towards you and stalled in the air for a combo (punch it). If you hook down while in the air, you'll shoot to the ground and create a shockwave, which launches", "cost": "50", "cooldown": "10s", "type": "Standard", "damage": "14.5 dmg (Medium)", "unlock": "Skill: vine grapple"}, {"id": "73", "name": "Vine Hook", "element": "Water", "elementKey": "water", "desc": "Grab onto all nearby entities in a 32 block radius with a poisonous vine, doing damage and pulling them towards you.", "cost": "5", "cooldown": "10s", "type": "Charge", "damage": "No direct damage", "unlock": "Skill: vine hook"}, {"id": "100", "name": "Avatar State", "element": "Avatar", "elementKey": "avatar", "desc": "Enter or exit the avatar state at will.", "cost": "30", "cooldown": "35s", "type": "Standard", "damage": "No direct damage", "unlock": "Skill: avatar state"}, {"id": "101", "name": "Super Frost Breath", "element": "Avatar", "elementKey": "avatar", "desc": "Exhale a wave of freezing air that locks nearby players and slows mobs in place. Requires water.", "cost": "50", "cooldown": "145s", "type": "Standard", "damage": "No direct damage", "unlock": "Level 100"}, {"id": "102", "name": "Super Fire Shockwave", "element": "Avatar", "elementKey": "avatar", "desc": "Release a massive blue-fire shockwave with no damage cap that blasts everything around you.", "cost": "60", "cooldown": "145s", "type": "Standard", "damage": "26.7 dmg (Ultra)", "unlock": "Level 90"}, {"id": "103", "name": "Super Air Shove", "element": "Avatar", "elementKey": "avatar", "desc": "Push the air around you to damage and launch all nearby entities up to 150 blocks away.", "cost": "50", "cooldown": "145s", "type": "Standard", "damage": "26.7 dmg (Ultra)", "unlock": "Level 70"}, {"id": "104", "name": "Super Earth Shield", "element": "Avatar", "elementKey": "avatar", "desc": "Raise a powerful earth barrier that continuously repels all entities around you. Must be grounded.", "cost": "70", "cooldown": "145s", "type": "Standard", "damage": "No direct damage", "unlock": "Level 80"}, {"id": "105", "name": "Super Burrow", "element": "Dark Avatar", "elementKey": "dark_avatar", "desc": "Sink all nearby enemies 4 blocks into the ground, trapping them below the surface.", "cost": "60", "cooldown": "145s", "type": "Standard", "damage": "No direct damage", "unlock": "Level 70"}, {"id": "106", "name": "Super Firewall", "element": "Dark Avatar", "elementKey": "dark_avatar", "desc": "Unleash three successive fire shockwaves that blast and ignite everything in range. Blue flames at level 100.", "cost": "60", "cooldown": "145s", "type": "Standard", "damage": "26.7 dmg (Ultra)", "unlock": "Level 80"}, {"id": "107", "name": "Super Tsunami", "element": "Dark Avatar", "elementKey": "dark_avatar", "desc": "Summon an expanding wave of water that grows in radius, dealing damage to all caught in it.", "cost": "60", "cooldown": "145s", "type": "Standard", "damage": "26.7 dmg (Ultra)", "unlock": "Level 90"}, {"id": "108", "name": "Super Typhoon", "element": "Dark Avatar", "elementKey": "dark_avatar", "desc": "Fire a travelling tornado that pulls and damages any entity it passes through.", "cost": "60", "cooldown": "145s", "type": "Standard", "damage": "26.7 dmg (Ultra)", "unlock": "Level 100"}, {"id": "109", "name": "Fire Jump", "element": "Fire", "elementKey": "fire", "desc": "Jump high into the air with a burst of fire, about 6 blocks!", "cost": "35", "cooldown": "35s", "type": "Standard", "damage": "No direct damage", "unlock": "Skill tree"}, {"id": "301", "name": "ElementalTyphoon", "element": "Dark Avatar", "elementKey": "dark_avatar", "desc": "", "cost": "85", "cooldown": "20s", "type": "-", "damage": "26.7 dmg (Ultra)", "unlock": "Level 70"}, {"id": "402", "name": "ChaosBeam", "element": "Dark Avatar", "elementKey": "dark_avatar", "desc": "", "cost": "3", "cooldown": "13s", "type": "-", "damage": "26.7 dmg (Ultra)", "unlock": "Level 75"}, {"id": "403", "name": "Singularity", "element": "Dark Avatar", "elementKey": "dark_avatar", "desc": "", "cost": "4", "cooldown": "50s", "type": "-", "damage": "26.7 dmg (Ultra)", "unlock": "Level 80"}, {"id": "404", "name": "Supernova", "element": "Dark Avatar", "elementKey": "dark_avatar", "desc": "", "cost": "5", "cooldown": "55s", "type": "-", "damage": "No direct damage", "unlock": "Level 85"}];
+const ELEMENT_COLORS = {"Air": "#8ecae6", "Water": "#219ebc", "Earth": "#7a9a4e", "Fire": "#e0592a", "Avatar": "#f2c14e", "Dark Avatar": "#9b5de5", "Nonbender": "#b0a99f"};
+
+const chipRow = document.getElementById('ref-chip-row');
+const elements = ['All', ...new Set(MOVES.map(m => m.element))];
+let activeElement = 'All';
+let searchTerm = '';
+
+function renderChips() {
+  chipRow.innerHTML = '';
+  elements.forEach(el => {
+    const chip = document.createElement('span');
+    chip.className = 'chip';
+    chip.textContent = el;
+    chip.dataset.active = (el === activeElement).toString();
+    if (el !== 'All') chip.style.setProperty('--chip-color', ELEMENT_COLORS[el]);
+    chip.addEventListener('click', () => {
+      activeElement = el;
+      renderChips();
+      renderTable();
+    });
+    chipRow.appendChild(chip);
+  });
+}
+
+function renderTable() {
+  const body = document.getElementById('ref-body');
+  const countEl = document.getElementById('ref-count');
+  const term = searchTerm.toLowerCase();
+  const filtered = MOVES.filter(m => {
+    const matchesElement = activeElement === 'All' || m.element === activeElement;
+    const matchesSearch = !term || m.name.toLowerCase().includes(term) || m.desc.toLowerCase().includes(term);
+    return matchesElement && matchesSearch;
+  });
+  countEl.textContent = filtered.length + ' of ' + MOVES.length + ' moves';
+  body.innerHTML = filtered.map(m => `
+    <tr>
+      <td class="mono">${m.id}</td>
+      <td><b>${m.name}</b></td>
+      <td><span class="elem-swatch" style="background:${ELEMENT_COLORS[m.element]}"></span>${m.element}</td>
+      <td>${m.type}</td>
+      <td>${m.cost}</td>
+      <td>${m.cooldown}</td>
+      <td>${m.damage}</td>
+      <td>${m.unlock}</td>
+      <td>${m.desc}</td>
+    </tr>
+  `).join('');
+}
+
+document.getElementById('ref-search').addEventListener('input', (e) => {
+  searchTerm = e.target.value;
+  renderTable();
+});
+
+renderChips();
+renderTable();
+</script>
+</body>
+</html>
