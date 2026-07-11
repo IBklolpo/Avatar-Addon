@@ -289,12 +289,11 @@ tr:hover td{background:#ffffff05;}
     </div>
     <div class="card">
       <h4>Bending armour sets</h4>
-      <p>Element-themed diamond-tier armour, craftable per element, that heals the wearer instead of taking damage
-      from other players when worn as a complete set.</p>
+      <p>Element themed armour, craftable per element, that gives the wearer certain passive effects and are immune to meelee attacks when worn as a complete set.</p>
     </div>
     <div class="card">
       <h4>Full admin control panel</h4>
-      <p>A UI-driven scroll (book/menu system) for editing world rules, per-player settings, world presets,
+      <p>Scroll with the ability for editing world rules, per player settings, world presets,
       move bans, and no-bending zones without commands.</p>
     </div>
     <div class="card">
@@ -306,10 +305,8 @@ tr:hover td{background:#ffffff05;}
 
   <h3 id="installation">Installation requirements</h3>
   <ul>
-    <li>Both the <b>Behavior Pack</b> and <b>Resource Pack</b> must be applied to the world &mdash; the addon will not
+    <li>Both the <b>Behavior Pack</b> and <b>Resource Pack</b> must be applied to the world the addon will not
     function correctly with only one installed.</li>
-    <li>The world must have <b>Beta APIs</b> (experimental scripting) enabled, since the addon runs entirely on the
-    <code>@minecraft/server</code> scripting API rather than vanilla commands.</li>
     <li>After installing, an operator should run <code>/function op</code> once to receive the <code>staff</code> tag
     required to open the admin menu.</li>
   </ul>
@@ -318,10 +315,8 @@ tr:hover td{background:#ffffff05;}
   <div class="table-scroll"><table>
     <tr><th>Component</th><th>Version</th></tr>
     <tr><td>Minimum engine version</td><td class="mono">1.21.60</td></tr>
-    <tr><td>Behavior pack format</td><td class="mono">format_version 2</td></tr>
     <tr><td><code>@minecraft/server</code></td><td class="mono">1.18.0</td></tr>
     <tr><td><code>@minecraft/server-ui</code></td><td class="mono">1.0.0</td></tr>
-    <tr><td>Addon version</td><td class="mono">2.0.0</td></tr>
   </table></div>
 </section>
 
@@ -329,26 +324,25 @@ tr:hover td{background:#ffffff05;}
   <h2><span class="num">02</span>Getting Started</h2>
 
   <h3 id="choosing-element">Choosing your element</h3>
-  <p>On first spawn, players open the <b>Choose Bending Style</b> menu to pick Air, Water, Earth, Fire, or Nonbender.
+  <p>On first spawn, players open the <b>Choose Bending</b> menu to pick Air, Water, Earth, Fire, Avatar, Dark Avatar or Nonbender.
   Two world settings change how this works:</p>
   <ul>
     <li><b>Bending Choice Final</b> &mdash; once toggled on, a player's element choice is locked in permanently.</li>
     <li><b>Bending Choice Random</b> &mdash; assigns a random element automatically instead of letting the player pick.</li>
   </ul>
-  <p>If the Avatar path is enabled for the server (<b>Avatar Publicly Selectable</b>), a player who becomes the Avatar
+  <p>If the Avatar path is enabled for the server (<b>Avatar Publicly Selectable</b>), a player who becomes the Avatar or Dark Avatar
   additionally chooses a <b>starting element</b>; the remaining three elements are then unlocked in the traditional
   cycle order (Air &rarr; Water &rarr; Earth &rarr; Fire) as they progress.</p>
 
   <h3 id="becoming-bender">Becoming a bender</h3>
   <p>Choosing an element immediately grants that element's base moveset at level 1. From there, bending level rises
-  through use (see <a href="#progression">Progression System</a>), unlocking further moves and skill tree perks.
-  The Avatar State itself only becomes available at <b>level 75</b>, and is a distinct on/off ability rather than a
-  permanently active form unless the server enables <b>Avatar State Permanent Duration</b>.</p>
+  through use (see <a href="#progression">Progression System</a>), of bending moves. The Avatar State itself only becomes available at <b>level 75</b>, and is a distinct on/off ability rather than a
+  permanently active form unless the server admin enables <b>Avatar State Permanent Duration</b>.</p>
 
   <h3 id="nonbender-gameplay">Non-bender gameplay</h3>
-  <p>Players who don't choose an element (or whose server has bending disabled) play as Nonbenders. Nonbenders are
-  not left without tools: they get a small, distinct kit of four moves built around chi-blocking rather than
-  elemental force &mdash; reflecting bending damage back at attackers, a plain dash, a short-range time-rewind that
+  <p>Players who don't choose an element play as Nonbenders. Nonbenders are
+  not left without tools they get four moves built around chi blocking rather than
+  bending force reflecting bending damage back at attackers, a plain dash, a short-range time-rewind that
   undoes recent damage, and detection of invisible entities. See <a href="#element-nonbender">Nonbenders</a> in the
   Bending System section for the full list.</p>
 
@@ -371,7 +365,7 @@ tr:hover td{background:#ffffff05;}
     <div class="element-block" id="element-air" style="--accent:#8ecae6">
       <h3><span class="dot"></span>Airbending</h3>
       <p class="lede">Air is the element of freedom. The Air Nomads detached themselves from worldly concerns, and they found peace and freedom.</p>
-      <p class="uses">Airbending favors movement and survival utility over raw damage: dashes, launches, scooters, spirit form and crowd-control pushes and pulls. It trades hard-hitting combat tools for the best mobility kit in the addon.</p>
+      <p class="uses">Airbending favors movement and survival utility over raw damage. Dashes, launches, scooters, spirit form and crowd control pushes and pulls. It trades hard hitting combat for the best mobility in the addon.</p>
       <div class="move-grid">
         <div class="move-card" style="--accent:#8ecae6">
           <div class="move-card-head">
@@ -409,7 +403,7 @@ tr:hover td{background:#ffffff05;}
             <span><b>Cost</b> 50 chi</span>
             <span><b>Cooldown</b> 18s</span>
             <span><b>Dmg (Lvl 1)</b> 4.9 dmg (2.45♥)</span><span><b>Dmg (Lvl 100)</b> 9.7 dmg (4.85♥)</span>
-            <span><b>Unlock</b> Skill: air slam</span>
+            <span><b>Unlock</b> Skill Tree: Air Dash</span>
           </div>
         </div>
         <div class="move-card" style="--accent:#8ecae6">
@@ -513,7 +507,7 @@ tr:hover td{background:#ffffff05;}
             <span><b>Cost</b> 0.25 chi</span>
             <span><b>Cooldown</b> 10s</span>
             <span><b>Damage</b> No direct damage</span>
-            <span><b>Unlock</b> Skill: air spirit</span>
+            <span><b>Unlock</b> Skill Tree: Air Spirit</span>
           </div>
         </div>
         <div class="move-card" style="--accent:#8ecae6">
@@ -539,7 +533,7 @@ tr:hover td{background:#ffffff05;}
             <span><b>Cost</b> 4 chi</span>
             <span><b>Cooldown</b> 10s</span>
             <span><b>Damage</b> No direct damage</span>
-            <span><b>Unlock</b> Skill: air puff</span>
+            <span><b>Unlock</b> Skill Tree: Air Puff</span>
           </div>
         </div>
         <div class="move-card" style="--accent:#8ecae6">
@@ -578,7 +572,7 @@ tr:hover td{background:#ffffff05;}
             <span><b>Cost</b> 30 chi</span>
             <span><b>Cooldown</b> 10s</span>
             <span><b>Dmg (Lvl 1)</b> 7.3 dmg (3.65♥)</span><span><b>Dmg (Lvl 100)</b> 14.5 dmg (7.25♥)</span>
-            <span><b>Unlock</b> Skill: wall shot</span>
+            <span><b>Unlock</b> Skill Tree: Wall Shot</span>
           </div>
         </div>
       </div>
